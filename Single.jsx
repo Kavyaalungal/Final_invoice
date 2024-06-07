@@ -212,10 +212,8 @@ function Single() {
       [event.target.name]: event.target.checked,
     });
   };
-
-
-
-  const clearDetails = () => {
+// for clearing the fields
+const clearDetails = () => {
     setLabNo('');
     setBranchId('');
     setYearId('');
@@ -314,7 +312,7 @@ setPhone1('');
           </Grid>
           <Grid item xs={12} sm={6}>
             <Button variant="contained" color="primary" onClick={fetchData}>
-              Fetch Data
+              Search
             </Button>
           </Grid>
         </Grid>
