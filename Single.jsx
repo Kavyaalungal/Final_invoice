@@ -4,6 +4,7 @@ import { TextField, Box, Typography, Grid, Button, FormControl, InputLabel, Sele
 import Navbar from './Navbar';
 
 function Single() {
+// State declarations for invoice details and user inputs
   const [labNo, setLabNo] = useState('');
   const [branchId, setBranchId] = useState('');
   const [yearId, setYearId] = useState('');
@@ -46,26 +47,26 @@ function Single() {
   const [report, setReport] = useState({ urgentwork: false });
   const [notes, setNotes] = useState('');
 
-// for searching
+// States for search results for different fields
 
   const [searchResultsRefBy, setSearchResultsRefBy] = useState([]);
   const [searchResultsCollBy, setSearchResultsCollBy] = useState([]);
   const [searchResultsBranch, setSearchResultsBranch] = useState([]);
   const [searchResultsCollMode, setSearchResultsCollMode] = useState([]);
 
-
+// Error states for each search field
   const [errorRefBy, setErrorRefBy] = useState(null);
   const [errorCollBy, setErrorCollBy] = useState(null);
   const [errorBranch, setErrorBranch] = useState(null);
   const[errorCollMode, setErrorCollMode] = useState(null);
 
+// Selected key states for each search field
   const [selectedRefByKey, setSelectedRefByKey] = useState('');
   const [selectedCollByKey, setSelectedCollByKey] = useState('');
   const [selectedBranchKey, setSelectedBranchKey] = useState('');
   const[selectedCollModeKey,setSelectedCollModeKey] = useState('')
-  // const [searchResults, setSearchResults] = useState([]);
-  // const [error, setError] = useState(null);
 
+ // Function to fetch search results from the API
   const fetchSearchResults = async (searchType, value) => {
     try {
       const response = await axios.get(`http://172.16.16.10:8082/api/SearchMaster`, {
@@ -80,36 +81,16 @@ function Single() {
     }
   };
 
-  // const handleSearchChange = async (searchType, value) => {
-  //   try {
-  //     const results = await fetchSearchResults(searchType, value);
-  //     // Sort the results alphabetically by the AhMst_pName property
-  //     results.sort((a, b) => {
-  //       // Convert names to lowercase and trim leading/trailing spaces
-  //       const nameA = a.AhMst_pName.trim().toLowerCase();
-  //       const nameB = b.AhMst_pName.trim().toLowerCase();
-  //       // Compare the names using localeCompare() for proper alphabetical sorting
-  //       return nameA.localeCompare(nameB);
-  //     });
-  //     setSearchResults(results);
-  //   } catch (error) {
-  //     setError(error.message);
-  //   }
-  // };
-  
-
-  const handleSearchChange = async (searchType, value, setSearchResults, setError) => {
+ // Function to handle search input changes and fetch results based on searchType
+   const handleSearchChange = async (searchType, value, setSearchResults, setError) => {
     try {
       const results = await fetchSearchResults(searchType, value);
       switch (searchType) {
         
         case 'RefBy':
-          // Sort the results alphabetically by the AhMst_pName property
           results.refByDetails.sort((a, b) => {
-            // Convert names to lowercase and trim leading/trailing spaces
             const nameA = a.AhMst_pName.trim().toLowerCase();
             const nameB = b.AhMst_pName.trim().toLowerCase();
-            // Compare the names using localeCompare() for proper alphabetical sorting
             return nameA.localeCompare(nameB);
           });
           setSearchResults(results.refByDetails);
@@ -117,12 +98,9 @@ function Single() {
           break;
 
         case 'CollBy':
-          // Sort the results alphabetically by the AhMst_pName property
           results.collByDetails.sort((a, b) => {
-            // Convert names to lowercase and trim leading/trailing spaces
             const nameA = a.AhMst_pName.trim().toLowerCase();
             const nameB = b.AhMst_pName.trim().toLowerCase();
-            // Compare the names using localeCompare() for proper alphabetical sorting
             return nameA.localeCompare(nameB);
           });
           setSearchResults(results.collByDetails);
@@ -130,12 +108,9 @@ function Single() {
           break;
 
           case 'Branch':
-            // Sort the results alphabetically by the AhMst_pName property
             results.brnchDetails.sort((a, b) => {
-              // Convert names to lowercase and trim leading/trailing spaces
               const nameA = a.BrMst_Name.trim().toLowerCase();
               const nameB = b.BrMst_Name.trim().toLowerCase();
-              // Compare the names using localeCompare() for proper alphabetical sorting
               return nameA.localeCompare(nameB);
             });
             setSearchResults(results.brnchDetails);
@@ -144,12 +119,9 @@ function Single() {
             break;
 
             case 'CollMode':
-              // Sort the results alphabetically by the AhMst_pName property
               results.mastrDetails.sort((a, b) => {
-                // Convert names to lowercase and trim leading/trailing spaces
                 const nameA = a.Mstr_Desc.trim().toLowerCase();
                 const nameB = b.Mstr_Desc.trim().toLowerCase();
-                // Compare the names using localeCompare() for proper alphabetical sorting
                 return nameA.localeCompare(nameB);
               });
               setSearchResults(results.mastrDetails);
@@ -164,28 +136,7 @@ function Single() {
       setError(error.message);
     }
   };
-  
-  // const handleRefByChange = (event, newValue) => {
-  //   if (newValue) {
-  //     const selectedRefBy = searchResults.find(result => result.AhMst_pName === newValue);
-  //     if (selectedRefBy) {
-  //       setSelectedRefByKey(selectedRefBy.AhMst_Key);
-  //       console.log('Selected Ref By Key:', selectedRefBy.AhMst_Key);
-  //     }
-  //   }
-  //   setRefBy(newValue);
-  // };
-  // const handleCollByChange = (event, newValue) => {
-  //   if (newValue) {
-  //     const selectedCollBy = searchResults.find(result => result.AhMst_pName === newValue);
-  //     if (selectedCollBy) {
-  //       setSelectedCollByKey(selectedCollBy.AhMst_Key);
-  //       console.log('Selected Ref By Key:', selectedCollBy.AhMst_Key);
-  //     }
-  //   }
-  //   setCollBy(newValue);
-  // };
-
+   // Event handler for RefBy field changes
   const handleRefByChange = (event, newValue) => {
     if (newValue) {
       const selectedRefBy = searchResultsRefBy.find(result => result.AhMst_pName === newValue);
@@ -196,7 +147,7 @@ function Single() {
     }
     setRefBy(newValue);
   };
-
+ // Event handler for CollBy field changes
   const handleCollByChange = (event, newValue) => {
     if (newValue) {
       const selectedCollBy = searchResultsCollBy.find(result => result.AhMst_pName === newValue);
@@ -207,6 +158,7 @@ function Single() {
     }
     setCollBy(newValue);
   };
+   // Event handler for Branh field changes
   const handleBranchChange = (event, newValue) => {
     if (newValue) {
       const selectedBranch = searchResultsBranch.find(result => result.BrMst_Name === newValue);
@@ -217,19 +169,18 @@ function Single() {
     }
     setBranch(newValue);
   };
-
-
-
-  const handleCollModeChange = (event, newValue) => {
+ // Event handler for CollMode field changes
+ const handleCollModeChange = (event, newValue) => {
     if (newValue) {
       const selectedCollMode = searchResultsCollMode.find(result => result.Mstr_Desc === newValue);
       if (selectedCollMode) {
-        setSelectedRefByKey(selectedCollMode.Mstr_Key);
+       setSelectedCollModeKey(selectedCollMode.Mstr_Key);
         console.log('Selected CollMode Key:', selectedCollMode.Mstr_Key);
       }
     }
     setCollMode(newValue);
   };
+  // Function to fetch data for the invoice based on user inputs
   const fetchData = async () => {
     try {
       console.log('Fetching data with params:', { labNo, yearId, branchId });
@@ -247,36 +198,14 @@ function Single() {
       setError(error.message);
     }
   };
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       console.log('Fetching data with params:', { labNo, yearId, branchId });
-  //       const response = await axios.get(`http://172.16.16.10:8082/api/EditInvoice`, {
-  //         params: {
-  //           LabNo: labNo,
-  //           YearId: yearId,
-  //           BranchId: branchId,
-  //         },
-  //       });
-  //       setInvoiceData(response.data.invoiceDtls);
-  //       console.log('Invoice Data:', response.data.invoiceDtls);
-  //     } catch (error) {
-  //       console.error('Error fetching data:', error);
-  //       setError(error.message);
-  //     }
-  //   };
-
-  //   if (labNo && yearId && branchId) {
-  //     fetchData();
-  //   }
-  // }, [labNo, yearId, branchId]);
+  // Event handler for report requested through checkbox changes
   const handleCheckboxChange = (event) => {
     setReportRequestedThrough({
       ...reportRequestedThrough,
       [event.target.name]: event.target.checked,
     });
   };
-
+  // Event handler for urgent work checkbox changes
   const handleCheckChange = (event) => {
     setReport({
       ...report,
@@ -373,10 +302,9 @@ function Single() {
     </Select>
   </FormControl>
 </Grid>
-
-          </Grid>
-        </Box>
-      )}
+</Grid>
+</Box>
+    )}
       {invoiceData && (
         <Box className="fieldset">
           <Grid container spacing={3} alignItems="center">
