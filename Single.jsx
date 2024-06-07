@@ -46,16 +46,24 @@ function Single() {
   const [report, setReport] = useState({ urgentwork: false });
   const [notes, setNotes] = useState('');
 
-
+// for searching
 
   const [searchResultsRefBy, setSearchResultsRefBy] = useState([]);
   const [searchResultsCollBy, setSearchResultsCollBy] = useState([]);
+  const [searchResultsBranch, setSearchResultsBranch] = useState([]);
+  const [searchResultsCollMode, setSearchResultsCollMode] = useState([]);
+
+
   const [errorRefBy, setErrorRefBy] = useState(null);
   const [errorCollBy, setErrorCollBy] = useState(null);
+  const [errorBranch, setErrorBranch] = useState(null);
+  const[errorCollMode, setErrorCollMode] = useState(null);
 
   const [selectedRefByKey, setSelectedRefByKey] = useState('');
   const [selectedCollByKey, setSelectedCollByKey] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
+  const [selectedBranchKey, setSelectedBranchKey] = useState('');
+  const[selectedCollModeKey,setSelectedCollModeKey] = useState('')
+  // const [searchResults, setSearchResults] = useState([]);
   // const [error, setError] = useState(null);
 
   const fetchSearchResults = async (searchType, value) => {
@@ -94,6 +102,7 @@ function Single() {
     try {
       const results = await fetchSearchResults(searchType, value);
       switch (searchType) {
+        
         case 'RefBy':
           // Sort the results alphabetically by the AhMst_pName property
           results.refByDetails.sort((a, b) => {
@@ -106,6 +115,7 @@ function Single() {
           setSearchResults(results.refByDetails);
           setError(null);
           break;
+
         case 'CollBy':
           // Sort the results alphabetically by the AhMst_pName property
           results.collByDetails.sort((a, b) => {
@@ -118,6 +128,35 @@ function Single() {
           setSearchResults(results.collByDetails);
           setError(null);
           break;
+
+          case 'Branch':
+            // Sort the results alphabetically by the AhMst_pName property
+            results.brnchDetails.sort((a, b) => {
+              // Convert names to lowercase and trim leading/trailing spaces
+              const nameA = a.BrMst_Name.trim().toLowerCase();
+              const nameB = b.BrMst_Name.trim().toLowerCase();
+              // Compare the names using localeCompare() for proper alphabetical sorting
+              return nameA.localeCompare(nameB);
+            });
+            setSearchResults(results.brnchDetails);
+            console.log(results.brnchDetails);
+            setError(null);
+            break;
+
+            case 'CollMode':
+              // Sort the results alphabetically by the AhMst_pName property
+              results.mastrDetails.sort((a, b) => {
+                // Convert names to lowercase and trim leading/trailing spaces
+                const nameA = a.Mstr_Desc.trim().toLowerCase();
+                const nameB = b.Mstr_Desc.trim().toLowerCase();
+                // Compare the names using localeCompare() for proper alphabetical sorting
+                return nameA.localeCompare(nameB);
+              });
+              setSearchResults(results.mastrDetails);
+              console.log(results.mastrDetails);
+              setError(null);
+              break;
+
         default:
           break;
       }
@@ -163,13 +202,34 @@ function Single() {
       const selectedCollBy = searchResultsCollBy.find(result => result.AhMst_pName === newValue);
       if (selectedCollBy) {
         setSelectedCollByKey(selectedCollBy.AhMst_Key);
-        console.log('Selected Ref By Key:', selectedCollBy.AhMst_Key);
+        console.log('Selected Coll By Key:', selectedCollBy.AhMst_Key);
       }
     }
     setCollBy(newValue);
   };
+  const handleBranchChange = (event, newValue) => {
+    if (newValue) {
+      const selectedBranch = searchResultsBranch.find(result => result.BrMst_Name === newValue);
+      if (selectedBranch) {
+        setSelectedBranchKey(selectedBranch.BrMst_Key);
+        console.log('Selected Branch Key:', selectedBranch.BrMst_Key);
+      }
+    }
+    setBranch(newValue);
+  };
 
 
+
+  const handleCollModeChange = (event, newValue) => {
+    if (newValue) {
+      const selectedCollMode = searchResultsCollMode.find(result => result.Mstr_Desc === newValue);
+      if (selectedCollMode) {
+        setSelectedRefByKey(selectedCollMode.Mstr_Key);
+        console.log('Selected CollMode Key:', selectedCollMode.Mstr_Key);
+      }
+    }
+    setCollMode(newValue);
+  };
   const fetchData = async () => {
     try {
       console.log('Fetching data with params:', { labNo, yearId, branchId });
@@ -550,17 +610,27 @@ function Single() {
               />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <TextField
-                id="branch"
-                label="Branch"
-                variant="outlined"
-                size="small"
-                fullWidth
-                value={invoiceData.Branch || ''}
-                onChange={(e) => setBranch(e.target.value)}
-                InputLabelProps={{ style: { fontSize: '14px' } }}
-              />
-            </Grid>
+        <Autocomplete
+          freeSolo
+          options={searchResultsBranch.map((result) => result.BrMst_Name)}
+          onInputChange={(event, newValue) => handleSearchChange('Branch', newValue, setSearchResultsBranch, setErrorBranch)}
+          onChange={handleBranchChange}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              id="branch"
+              label="Branch"
+              variant="outlined"
+              size="small"
+              fullWidth
+              error={!!errorBranch}
+              helperText={errorBranch}
+              InputLabelProps={{ style: { fontSize: '14px' } }}
+            />
+          )}
+        />
+        <input type="hidden" id="selectedBranchKey" value={selectedBranchKey} />
+      </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
                 id="aadhar"
@@ -598,17 +668,27 @@ function Single() {
               />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <TextField
-                id="collmode"
-                label="Coll Mode."
-                variant="outlined"
-                size="small"
-                fullWidth
-                value={invoiceData.Inv_CollMode || ''}
-                onChange={(e) => setCollMode(e.target.value)}
-                InputLabelProps={{ style: { fontSize: '14px' } }}
-              />
-            </Grid>
+        <Autocomplete
+          freeSolo
+          options={searchResultsCollMode.map((result) => result.Mstr_Desc)}
+          onInputChange={(event, newValue) => handleSearchChange('CollMode', newValue, setSearchResultsCollMode, setErrorCollMode)}
+          onChange={handleCollModeChange}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              id="collMode"
+              label="CollMode"
+              variant="outlined"
+              size="small"
+              fullWidth
+              error={!!errorCollMode}
+              helperText={errorCollMode}
+              InputLabelProps={{ style: { fontSize: '14px' } }}
+            />
+          )}
+        />
+        <input type="hidden" id="selectedCollModeKey" value={selectedCollModeKey} />
+      </Grid>
             <Grid item xs={12} sm={6}>
         <Autocomplete
           freeSolo
