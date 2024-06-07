@@ -213,13 +213,63 @@ function Single() {
     });
   };
 
+
+
+  const clearDetails = () => {
+    setLabNo('');
+    setBranchId('');
+    setYearId('');
+  setInvoiceData(null);
+  setError(null);
+  setDateTime('');
+  setPrefix('');
+  setName('');
+  setDay('');
+setMonth('');
+setYear('');
+setGender('');
+setDob('');
+setPhone1('');
+  setPhone2('');
+    setEmail('');
+    setNationality('');
+    setAddress('');
+   setRefBy('');
+    setOutDr('');
+  setPassport('');
+   setSrfNo('');
+   setBranche('');
+    setAadhar('');
+    setWardNo('');
+   setIpOpNo('');
+  setCollMode('');
+    setCollBy('');
+     setSampleOn('');
+    setReportOn('');
+ setReportRequestedThrough({
+      personally: false,
+      whatsapp: false,
+      courier: false,
+      email: false,
+      sms: false,
+      telephone: false,
+    });
+ setField('');
+     setReport({ urgentwork: false });
+    setNotes('');
+  // };
+  };
+  // Event handler for "NEW" button click
+  const handleNewButtonClick = () => {
+    clearDetails();
+  };
   return (
     <Box className="edit-invoice-container">
       <Navbar />
       <Box className="navbar">
         <Typography variant="h4" className="navbar-heading">Edit Invoice</Typography>
         <Box className="navbar-buttons">
-          <Button variant="contained" color="primary" className="navbar-button">NEW</Button>
+          <Button variant="contained" color="primary" className="navbar-button" onClick={handleNewButtonClick}>NEW</Button>
           <Button variant="contained" color="secondary" className="navbar-button">SAVE</Button>
           <Button variant="contained" color="default" className="navbar-button">EXIT</Button>
         </Box>
@@ -704,15 +754,13 @@ function Single() {
         label="SMS"
       />
       <FormControlLabel
-        control={<Checkbox checked={invoiceData.Inv_RepThrTelephone} onChange={handleCheckboxChange} name="telephone" />}
+        control={<Checkbox checked={invoiceData.Inv_RepThrPhone} onChange={handleCheckboxChange} name="telephone" />}
         label="Telephone"
       />
     </FormGroup>
   </FormControl>
 </Grid>
-
-      
-      </Grid>
+ </Grid>
     </Box>
       )}
       {invoiceData && (
