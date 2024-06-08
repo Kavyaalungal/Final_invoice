@@ -1,0 +1,19 @@
+.logo-icon{
+    height: 30px;
+    width: 30px;
+}
+/* h1{
+    margin-left: 5%;
+} */
+.navbar {
+  background-color: #f0f0f0;
+  padding: 10px 20px;
+}
+
+.logo {
+  height: 40px; /* Adjust height as needed */
+}
+
+.close-button {
+  margin-left: auto; /* Push the close button to the right */
+}

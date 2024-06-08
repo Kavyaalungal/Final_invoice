@@ -7,6 +7,8 @@ import Swr from './Fetch';
 import Fetch from './Fetch';
 import Single from './Single';
 import Search from './Search';
+import Edit from './Edit';
+import ParentComponent from './ParentComponent';
 
 const theme = createTheme({
   palette: {
@@ -29,9 +31,11 @@ function App() {
 
     
     <ThemeProvider theme={theme}>
-      {/* <Search/> */}
+      {/* <ParentComponent/> */}
+      <Edit/> 
+      {/* <Search/>
       {/* <SingleFieldFetch/> */}
-      <Single/>
+      {/* <Single/> */}
       {/* <InvoiceData/> */}
       {/* <Invoice /> */}
       {/* <Fetch/> */}
