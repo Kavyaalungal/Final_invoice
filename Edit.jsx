@@ -11,6 +11,8 @@ function Edit() {
   const [email, setEmail] = useState('');
   const [phone1, setPhone1] = useState('');
   const [phone2, setPhone2] = useState('');
+  const [nationality, setNationality] = useState('');
+  const [address, setAddress] = useState('');
   const [invoiceData, setInvoiceData] = useState(null);
   const [error, setError] = useState(null);
   const [isDataUpdated, setIsDataUpdated] = useState(false);
@@ -19,8 +21,13 @@ function Edit() {
   const [isPhone2Valid, setIsPhone2Valid] = useState(true);
 
   useEffect(() => {
-    setIsDataUpdated(name !== (invoiceData?.Inv_name || '') || email !== (invoiceData?.Inv_Email || '') || phone1 !== (invoiceData?.Inv_phno || '') || phone2 !== (invoiceData?.Inv_Mob || ''));
-  }, [name, email,phone1,phone2, invoiceData]);
+    setIsDataUpdated(name !== (invoiceData?.Inv_name || '') ||
+     phone1 !== (invoiceData?.Inv_phno || '') ||
+       phone2 !== (invoiceData?.Inv_Mob || '') ||
+       email !== (invoiceData?.Inv_Email || '') ||
+        nationality !== (invoiceData?.Inv_Nationality || '')||
+        address !== (invoiceData?.Inv_Address || ''));
+  }, [name, phone1,phone2,email,nationality,address, invoiceData]);
 
   // Function to validate email using regex
   const validateEmail = (email) => {
@@ -46,6 +53,8 @@ function Edit() {
       setEmail(response.data.invoiceDtls.Inv_Email || '');
       setPhone1(response.data.invoiceDtls.Inv_phno || '');
       setPhone2(response.data.invoiceDtls.Inv_Mob || '');
+      setNationality(response.data.invoiceDtls.Inv_Nationality || '');
+      setAddress(response.data.invoiceDtls.Inv_Address || '');
     } catch (error) {
       setError(error.message);
     }
@@ -76,6 +85,8 @@ function Edit() {
       Inv_Email: email,
       Inv_phno: phone1,
       Inv_Mob : phone2,
+      Inv_Nationality:nationality,
+      Inv_Address:address,
     })
       .then(response => {
         console.log('Data saved successfully:', response.data);
@@ -83,6 +94,8 @@ function Edit() {
         console.log('Updated Email:', email);
         console.log('Updated phone1:', phone1);
         console.log('Updated phone1:', phone2);
+        console.log('Updated address:', address);
+        console.log('Updated nationality:', nationality);
         
       })
       .catch(error => {
@@ -150,7 +163,7 @@ function Edit() {
       {invoiceData && (
         <Box className="fieldset">
           <Grid container spacing={3} alignItems="center">
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={10}>
               <TextField
                 id="name"
                 label="Name"
@@ -162,23 +175,7 @@ function Edit() {
                 InputLabelProps={{ style: { fontSize: '14px' } }}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                id="email"
-                label="Email"
-                variant="outlined"
-                size="small"
-                fullWidth
-                value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                  setIsEmailValid(true); // Reset email validation on change
-                }}
-                InputLabelProps={{ style: { fontSize: '14px' } }}
-                error={!isEmailValid} // Apply error style if email is invalid
-                helperText={!isEmailValid ? "Invalid email address" : ""} // Display error message
-              />
-            </Grid>
+        
             <Grid item xs={12} sm={6}>
               <TextField
                 id="phone1"
@@ -211,6 +208,46 @@ function Edit() {
                 helperText={!isPhone2Valid ? "Invalid Phone number" : ""} 
               />
             </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                id="email"
+                label="Email"
+                variant="outlined"
+                size="small"
+                fullWidth
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  setIsEmailValid(true); // Reset email validation on change
+                }}
+                InputLabelProps={{ style: { fontSize: '14px' } }}
+                error={!isEmailValid} // Apply error style if email is invalid
+                helperText={!isEmailValid ? "Invalid email address" : ""} // Display error message
+              />
+            </Grid>   <Grid item xs={12} sm={6}>
+            <TextField
+              id="nationality"
+              label="Nationality"
+              variant="outlined"
+              size="small"
+              fullWidth
+              value={nationality}
+              onChange={(e) => setNationality(e.target.value)}
+              InputLabelProps={{ style: { fontSize: '14px' } }}
+            />
+          </Grid>
+          <Grid item xs={12} sm={12}>
+            <TextField
+              id="address"
+              label="Address"
+              variant="outlined"
+              size="small"
+              fullWidth
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              InputLabelProps={{ style: { fontSize: '14px' } }}
+            />
+          </Grid>
           
             {/* Add more fields for other data */}
           </Grid>
