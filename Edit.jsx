@@ -49,7 +49,7 @@ function Edit() {
   const [isPhone1Valid, setIsPhone1Valid] = useState(true);
   const [isPhone2Valid, setIsPhone2Valid] = useState(true);
 
-
+ 
   // States for search results for different fields
 
   const [searchResultsRefBy, setSearchResultsRefBy] = useState([]);
@@ -69,6 +69,11 @@ function Edit() {
   const [selectedBranchKey, setSelectedBranchKey] = useState('');
   const[selectedCollModeKey,setSelectedCollModeKey] = useState('')
 
+  const [invData, setInvData] = useState({
+    Inv_DrId: invoiceData?.Inv_DrId || 0,
+    Inv_CltnID: invoiceData?.Inv_CltnID || 0,
+    Inv_CollModeId:invoiceData?.Inv_CollModeId || 0
+  });
 
   useEffect(() => {
     setIsDataUpdated(prefix !== (invoiceData?.Inv_Tittle || '') ||
@@ -105,7 +110,7 @@ function Edit() {
      phone2, email, nationality, address,outDr,passport,srfNo,
      wardNo,ipOpNo,aadhar,refBy,branch,collBy,collMode,sampleOn, reportOn, reportRequestedThrough, invoiceData]);
 
-
+   
   useEffect(() => {
     const prefixToGender = {
       Mr: 'M',
@@ -135,117 +140,220 @@ function Edit() {
           BranchId: branchId,
         },
       });
-      setInvoiceData(response.data.invoiceDtls);
+      const invoiceData = response.data.invoiceDtls;
+      setInvoiceData(invoiceData);
+      const refByValue = invoiceData.Inv_RefBy || '';
+      setRefBy(refByValue);
+
+      // Initialize search results if Ref By value exists
+      if (refByValue) {
+        setSearchResultsRefBy([{ AhMst_pName: refByValue }]);
+      } else {
+        setSearchResultsRefBy([]);
+      }
+
+       // Initialize CollBy field
+       const collByValue = invoiceData.Inv_CollBy || '';
+       setCollBy(collByValue);
+       if (collByValue) {
+         setSearchResultsCollBy([{ AhMst_pName: collByValue }]);
+       } else {
+         setSearchResultsCollBy([]);
+       }
+
+       const collModeValue = invoiceData.Inv_CollMode || '';
+       setCollBy(collModeValue);
+       if (collModeValue) {
+         setSearchResultsCollMode([{ Mstr_Desc: collModeValue }]);
+       } else {
+         setSearchResultsCollMode([]);
+       }
+    setInvData({
+      Inv_DrId: invoiceData?.Inv_DrId || 0,
+      Inv_CltnID: invoiceData?.Inv_CltnID || 0,
+      Inv_CollModeId:invoiceData?.Inv_CollModeId || 0,
+        });
+      // setInvoiceData(response.data.invoiceDtls);
+      // console.log('RefBy from API:', response.data.invoiceDtls.Inv_RefBy);
       const validPrefixes = ['', 'Mr', 'Mrs', 'Ms', 'Miss'];
-      setPrefix(validPrefixes.includes(response.data.invoiceDtls.Inv_Tittle) ? response.data.invoiceDtls.Inv_Tittle : '');
-      setName(response.data.invoiceDtls.Inv_name || '');
-      setDay(response.data.invoiceDtls.Inv_ageDD !== null && response.data.invoiceDtls.Inv_ageDD !== undefined ? response.data.invoiceDtls.Inv_ageDD : '');
-      setMonth(response.data.invoiceDtls.Inv_ageMM || '');
-      setYear(response.data.invoiceDtls.Inv_ageYY || '');
-      setDob(response.data.invoiceDtls.Inv_Dob || '');
+      setPrefix(validPrefixes.includes(invoiceData.Inv_Tittle) ? invoiceData.Inv_Tittle : '');
+      setName(invoiceData.Inv_name || '');
+      setDay(invoiceData.Inv_ageDD !== null && invoiceData.Inv_ageDD !== undefined ? invoiceData.Inv_ageDD : '');
+      setMonth(invoiceData.Inv_ageMM || '');
+      setYear(invoiceData.Inv_ageYY || '');
+      setDob(invoiceData.Inv_Dob || '');
       const validGender = ['', 'M', 'F', 'O'];
-      setGender(validGender.includes(response.data.invoiceDtls.Inv_Gender) ? response.data.invoiceDtls.Inv_Gender : '');
-      setEmail(response.data.invoiceDtls.Inv_Email || '');
-      setPhone1(response.data.invoiceDtls.Inv_phno || '');
-      setPhone2(response.data.invoiceDtls.Inv_Mob || '');
-      setNationality(response.data.invoiceDtls.Inv_Nationality || '');
-      setAddress(response.data.invoiceDtls.Inv_Address || '');
-      setOutDr(response.data.invoiceDtls.Inv_OutDr || '');
-      setSrfNo(response.data.invoiceDtls.Inv_SRFno !== null && response.data.invoiceDtls.Inv_SRFno !== undefined ? response.data.invoiceDtls.Inv_SRFno : '');
-      setRefBy(response.data.invoiceDtls.Inv_RefBy || '');
-      setBranch(response.data.invoiceDtls.Branch || '');
-      setCollBy(response.data.invoiceDtls.Inv_CollBy || '');
-      setCollMode(response.data.invoiceDtls.Inv_CollMode || '');
-      setPassport(response.data.invoiceDtls.Inv_Passport || '');
-      setAadhar(response.data.invoiceDtls.Inv_Aadhaar || '');
-      setIpOpNo(response.data.invoiceDtls.Inv_RsltNO || '');
-      setWardNo(response.data.invoiceDtls.Inv_Ward || '');
+      setGender(validGender.includes(invoiceData.Inv_Gender) ? invoiceData.Inv_Gender : '');
+      setEmail(invoiceData.Inv_Email || '');
+      setPhone1(invoiceData.Inv_phno || '');
+      setPhone2(invoiceData.Inv_Mob || '');
+      setNationality(invoiceData.Inv_Nationality || '');
+      setAddress(invoiceData.Inv_Address || '');
+      setOutDr(invoiceData.Inv_OutDr || '');
+      setSrfNo(invoiceData.Inv_SRFno !== null && invoiceData.Inv_SRFno !== undefined ? invoiceData.Inv_SRFno : '');
+      setRefBy(invoiceData.Inv_RefBy || '');
+      setSearchResultsRefBy([invoiceData.Inv_RefBy]);
+      setBranch(invoiceData.Branch || '');
+      setCollBy(invoiceData.Inv_CollBy || '');
+      setSearchResultsCollBy([invoiceData.Inv_CollBy]);
+      setCollMode(invoiceData.Inv_CollMode || '');
+      setSearchResultsCollMode([invoiceData.Inv_CollMode]);
+      setPassport(invoiceData.Inv_Passport || '');
+      setAadhar(invoiceData.Inv_Aadhaar || '');
+      setIpOpNo(invoiceData.Inv_RsltNO || '');
+      setWardNo(invoiceData.Inv_Ward || '');
       setReportRequestedThrough({
-        personally: response.data.invoiceDtls.Inv_RepThrPersonal || false,
-        whatsapp: response.data.invoiceDtls.Inv_RepThrCourier || false,
-        courier: response.data.invoiceDtls.Inv_RepThrPhone || false,
-        email: response.data.invoiceDtls.Inv_RepThrEmail || false,
-        sms: response.data.invoiceDtls.Inv_RepThrSms || false,
-        telephone: response.data.invoiceDtls.Inv_RepThrPhone || false,
+        personally: invoiceData.Inv_RepThrPersonal || false,
+        whatsapp: invoiceData.Inv_RepThrCourier || false,
+        courier: invoiceData.Inv_RepThrPhone || false,
+        email: invoiceData.Inv_RepThrEmail || false,
+        sms: invoiceData.Inv_RepThrSms || false,
+        telephone: invoiceData.Inv_RepThrPhone || false,
       });
     } catch (error) {
       setError(error.message);
     }
   };
 
-  const saveDataToAPI = () => {
-    // Check if email is filled and validate email format
-    if (email && !validateEmail(email)) {
-      setIsEmailValid(false);
-      return;
-    }
+//   const saveDataToAPI = () => {
+//     // Check if email is filled and validate email format
+//     if (email && !validateEmail(email)) {
+//       setIsEmailValid(false);
+//       return;
+//     }
 
-    // Check if phone1 is filled and validate phone number format
-    if (phone1 && !validatePhone(phone1)) {
-      setIsPhone1Valid(false);
-      return;
-    }
+//     // Check if phone1 is filled and validate phone number format
+//     if (phone1 && !validatePhone(phone1)) {
+//       setIsPhone1Valid(false);
+//       return;
+//     }
 
-    // Check if phone2 is filled and validate phone number format
-    if (phone2 && !validatePhone(phone2)) {
-      setIsPhone2Valid(false);
-      return;
-    }
+//     // Check if phone2 is filled and validate phone number format
+//     if (phone2 && !validatePhone(phone2)) {
+//       setIsPhone2Valid(false);
+//       return;
+//     }
 
-    axios.post('http://172.16.16.10:8082/api/EditInvSave', {
-      ...invoiceData,
-      Inv_Tittle: prefix,
-      Inv_name: name,
-      Inv_ageDD: age,
-      Inv_ageMM: month,
-      Inv_ageYY: year,
-      Inv_Gender: gender,
-      Inv_Dob:dob,
-      Inv_Email: email,
-      Inv_phno: phone1,
-      Inv_Mob: phone2,
-      Inv_Nationality: nationality,
-      Inv_Address: address,
-      Inv_Aadhaar:aadhar,
-      Inv_OutDr:outDr,
-      Inv_Passport:passport,
-      Inv_RsltNO:ipOpNo,
-      Inv_SRFno:srfNo,
-      Inv_Ward:wardNo,
-      Inv_CollBy:collBy,
-      Inv_CollMode:collMode,
-      Inv_RefBy: refBy,
-      Branch:branch,
-      Inv_RepThrPersonal: reportRequestedThrough.personally,
-      Inv_RepThrCourier: reportRequestedThrough.whatsapp,
-      Inv_RepThrPhone: reportRequestedThrough.courier,
-      Inv_RepThrEmail: reportRequestedThrough.email,
-      Inv_RepThrSms: reportRequestedThrough.sms,
-      Inv_RepThrTelephone: reportRequestedThrough.telephone
- })
-      .then(response => {
-        console.log('Data saved successfully: ', response.data);
-        toast.success('Data updated successfully!');
-          console.log('Updated refby:', refBy); // Show success message
-          console.log('Updated branch:', branch);
-          console.log('Updated outdr:', outDr);
-          console.log('Updated passport:', passport);
-          console.log('Updated wardno:', wardNo);
-          console.log('Updated srfno:', srfNo);
-          console.log('Updated aadhar:', aadhar);
-          console.log('Updated ipopno:', ipOpNo);
-          console.log('Updated phone1:', phone2);
-          console.log('Updated collmode:', collMode);
-          console.log('Updated collby:', collBy);
-          console.log('Updated reportrequestedthrough:', reportRequestedThrough);
+//     axios.post('http://172.16.16.10:8082/api/EditInvSave', {
+//       ...invoiceData,
+//       Inv_Tittle: prefix,
+//       Inv_name: name,
+//       Inv_ageDD: age,
+//       Inv_ageMM: month,
+//       Inv_ageYY: year,
+//       Inv_Gender: gender,
+//       Inv_Dob:dob,
+//       Inv_Email: email,
+//       Inv_phno: phone1,
+//       Inv_Mob: phone2,
+//       Inv_Nationality: nationality,
+//       Inv_Address: address,
+//       Inv_Aadhaar:aadhar,
+//       Inv_OutDr:outDr,
+//       Inv_Passport:passport,
+//       Inv_RsltNO:ipOpNo,
+//       Inv_SRFno:srfNo,
+//       Inv_Ward:wardNo,
+//       Inv_CollBy:collBy,
+//       Inv_CollMode:collMode,
+//       Inv_RefBy: refBy,
+//       Branch:branch,
+//       Inv_RepThrPersonal: reportRequestedThrough.personally,
+//       Inv_RepThrCourier: reportRequestedThrough.whatsapp,
+//       Inv_RepThrPhone: reportRequestedThrough.courier,
+//       Inv_RepThrEmail: reportRequestedThrough.email,
+//       Inv_RepThrSms: reportRequestedThrough.sms,
+//       Inv_RepThrTelephone: reportRequestedThrough.telephone
+//  })
+//       .then(response => {
+//         console.log('Data saved successfully: ', response.data);
+//         toast.success('Data updated successfully!');
+//           console.log('Updated refby:', refBy); // Show success message
+//           console.log('Updated branch:', branch);
+//           console.log('Updated outdr:', outDr);
+//           console.log('Updated passport:', passport);
+//           console.log('Updated wardno:', wardNo);
+//           console.log('Updated srfno:', srfNo);
+//           console.log('Updated aadhar:', aadhar);
+//           console.log('Updated ipopno:', ipOpNo);
+//           console.log('Updated phone1:', phone2);
+//           console.log('Updated collmode:', collMode);
+//           console.log('Updated collby:', collBy);
   
-        })
-        .catch(error => {
-          console.error('Error saving data:', error);
-          toast.error('Error saving data.');
-        });
-    };
-  
+//         })
+//         .catch(error => {
+//           console.error('Error saving data:', error);
+//           toast.error('Error saving data.');
+//         });
+//     };
+const saveDataToAPI = () => {
+  // Check if email is filled and validate email format
+  if (email && !validateEmail(email)) {
+    setIsEmailValid(false);
+    return;
+  }
+
+  // Check if phone1 is filled and validate phone number format
+  if (phone1 && !validatePhone(phone1)) {
+    setIsPhone1Valid(false);
+    return;
+  }
+
+  // Check if phone2 is filled and validate phone number format
+  if (phone2 && !validatePhone(phone2)) {
+    setIsPhone2Valid(false);
+    return;
+  }
+
+  const payload = {
+    ...invoiceData,
+    Inv_Tittle: prefix,
+    Inv_name: name,
+    Inv_ageDD: day,
+    Inv_ageMM: month,
+    Inv_ageYY: year,
+    Inv_Gender: gender,
+    Inv_Dob: dob,
+    Inv_Email: email,
+    Inv_phno: phone1,
+    Inv_Mob: phone2,
+    Inv_Nationality: nationality,
+    Inv_Address: address,
+    Inv_Aadhaar: aadhar,
+    Inv_OutDr: outDr,
+    Inv_Passport: passport,
+    Inv_RsltNO: ipOpNo,
+    Inv_SRFno: srfNo,
+    Inv_Ward: wardNo,
+    Inv_CollBy: collBy,
+    Inv_CollMode: collMode,
+    Inv_RefBy: refBy,
+    Inv_DrId: invData.Inv_DrId,
+    Inv_CltnID:invData.Inv_CltnID,
+    Inv_CollModeId:invData.Inv_CollModeId,
+    Branch: branch,
+    Inv_RepThrPersonal: reportRequestedThrough.personally,
+    Inv_RepThrCourier: reportRequestedThrough.whatsapp,
+    Inv_RepThrPhone: reportRequestedThrough.courier,
+    Inv_RepThrEmail: reportRequestedThrough.email,
+    Inv_RepThrSms: reportRequestedThrough.sms,
+    Inv_RepThrTelephone: reportRequestedThrough.telephone
+  };
+
+  // Log the payload to check if all values are correct
+  console.log('Payload to be sent to API:', payload);
+
+  axios.post('http://172.16.16.10:8082/api/EditInvSave', payload)
+    .then(response => {
+      console.log('Data saved successfully: ', response.data);
+      toast.success('Data updated successfully!');
+    })
+    .catch(error => {
+      console.error('Error saving data:', error);
+      toast.error('Error saving data.');
+    });
+};
+
     const calculateAge = (dob) => {
       if (dob) {
         const birthDate = new Date(dob);
@@ -346,33 +454,50 @@ function Edit() {
         setError(error.message);
       }
     };
-     // Event handler for RefBy field changes
-     const handleRefByChange = (event, newValue) => {
-      console.log('New value selected:', newValue);
+    //function to
+    const handleRefByChange = (event, newValue) => {
       if (newValue) {
         const selectedRefBy = searchResultsRefBy.find(result => result.AhMst_pName === newValue);
-        console.log('Selected Ref By:', selectedRefBy);
         if (selectedRefBy) {
           setSelectedRefByKey(selectedRefBy.AhMst_Key);
-          console.log('Selected Ref By Key:', selectedRefBy.AhMst_Key);
-          // Update the state with the selected value
-          setRefBy(selectedRefBy.AhMst_pName);
-          console.log('Ref By state updated:', selectedRefBy.AhMst_pName);
+          setRefBy(newValue);
+          setInvData(prevState => ({
+            ...prevState,
+            Inv_DrId: selectedRefBy.AhMst_Key, // Set Inv_DrId to the selected key
+          }));
         }
+      } else {
+        setSelectedRefByKey('');
+        setRefBy('');
+        setInvData(prevState => ({
+          ...prevState,
+          Inv_DrId: 0, // Set Inv_DrId to 0 when no value is selected
+        }));
       }
     };
     
+    
    // Event handler for CollBy field changes
-    const handleCollByChange = (event, newValue) => {
-      if (newValue) {
-        const selectedCollBy = searchResultsCollBy.find(result => result.AhMst_pName === newValue);
-        if (selectedCollBy) {
-          setSelectedCollByKey(selectedCollBy.AhMst_Key);
-          console.log('Selected Coll By Key:', selectedCollBy.AhMst_Key);
-        }
+   const handleCollByChange = (event, newValue) => {
+    if (newValue) {
+      const selectedCollBy = searchResultsCollBy.find(result => result.AhMst_pName === newValue);
+      if (selectedCollBy) {
+        setSelectedCollByKey(selectedCollBy.AhMst_Key);
+        setCollBy(newValue);
+        setInvData(prevState => ({
+          ...prevState,
+          Inv_CltnID: selectedCollBy.AhMst_Key, // Set Inv_CltnID to the selected key
+        }));
       }
-      setCollBy(newValue);
-    };
+    } else {
+      setSelectedCollByKey('');
+      setCollBy('');
+      setInvData(prevState => ({
+        ...prevState,
+        Inv_CltnID: 0, // Set Inv_CltnID to 0 when no value is selected
+      }));
+    }
+  };
      // Event handler for Branh field changes
     const handleBranchChange = (event, newValue) => {
       if (newValue) {
@@ -386,25 +511,33 @@ function Edit() {
     };
    // Event handler for CollMode field changes
    const handleCollModeChange = (event, newValue) => {
-      if (newValue) {
-        const selectedCollMode = searchResultsCollMode.find(result => result.Mstr_Desc === newValue);
-        if (selectedCollMode) {
-         setSelectedCollModeKey(selectedCollMode.Mstr_Key);
-          console.log('Selected CollMode Key:', selectedCollMode.Mstr_Key);
-        }
+    if (newValue) {
+      const selectedCollMode = searchResultsCollMode.find(result => result.Mstr_Desc === newValue);
+      if (selectedCollMode) {
+        setSelectedCollModeKey(selectedCollMode.Mstr_Key);
+        setCollMode(newValue);
+        setInvData(prevState => ({
+          ...prevState,
+          Inv_CollModeId: selectedCollMode.Mstr_Key, // Set Inv_CltnID to the selected key
+        }));
       }
-      setCollMode(newValue);
-    }; 
+    } else {
+      setSelectedCollModeKey('');
+      setCollMode('');
+      setInvData(prevState => ({
+        ...prevState,
+        Inv_CollModeId: 0, // Set Inv_CltnID to 0 when no value is selected
+      }));
+    }
+  };
     
       // Event handler for report requested through checkbox changes
-      const handleCheckboxChange = (event) => {
-        const { name, checked } = event.target;
-        setReportRequestedThrough((prevState) => ({
-          ...prevState,
-          [name]: checked
-        }));
-      };
-      
+  const handleCheckboxChange = (event) => {
+    setReportRequestedThrough({
+      ...reportRequestedThrough,
+      [event.target.name]: event.target.checked,
+    });
+  };
   // Event handler for urgent work checkbox changes
   // const handleCheckChange = (event) => {
   //   setReport({
@@ -661,27 +794,27 @@ function Edit() {
           <Box className="fieldset">
           <Grid container spacing={3} alignItems="center">
           <Grid item xs={12} sm={6}>
-        <Autocomplete
-          freeSolo
-          options={searchResultsRefBy.map((result) => result.AhMst_pName)}
-          onInputChange={(event, newValue) => handleSearchChange('RefBy', newValue, setSearchResultsRefBy, setErrorRefBy)}
-          onChange={handleRefByChange}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              id="refBy"
-              label="Ref By"
-              variant="outlined"
-              size="small"
-              fullWidth
-              error={!!errorRefBy}
-              helperText={errorRefBy}
-              InputLabelProps={{ style: { fontSize: '14px' } }}
-            />
-          )}
-        />
-        <input type="hidden" id="selectedRefByKey" value={selectedRefByKey} />
-      </Grid>
+      <Autocomplete
+        freeSolo
+        options={searchResultsRefBy.map((result) => result ? result.AhMst_pName : '')}
+        value={refBy}
+        onInputChange={(event, newValue) => handleSearchChange('RefBy', newValue, setSearchResultsRefBy, setErrorRefBy)}
+        onChange={handleRefByChange}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            id="refBy"
+            label="Ref By"
+            variant="outlined"
+            size="small"
+            fullWidth
+            error={!!errorRefBy}
+            helperText={errorRefBy}
+            InputLabelProps={{ style: { fontSize: '14px' } }}
+          />
+        )}
+      />
+    </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
                 id="outdr"
@@ -779,7 +912,7 @@ function Edit() {
             <Grid item xs={12} sm={6}>
         <Autocomplete
           freeSolo
-          options={searchResultsCollMode.map((result) => result.Mstr_Desc)}
+          options={searchResultsCollMode.map((result) =>result ? result.Mstr_Desc : '')}
           onInputChange={(event, newValue) => handleSearchChange('CollMode', newValue, setSearchResultsCollMode, setErrorCollMode)}
           onChange={handleCollModeChange}
           renderInput={(params) => (
@@ -798,10 +931,11 @@ function Edit() {
         />
         <input type="hidden" id="selectedCollModeKey" value={selectedCollModeKey} />
       </Grid>
-            <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={6}>
         <Autocomplete
           freeSolo
-          options={searchResultsCollBy.map((result) => result.AhMst_pName)}
+          options={searchResultsCollBy.map((result) => result ? result.AhMst_pName : '')}
+          value={collBy}
           onInputChange={(event, newValue) => handleSearchChange('CollBy', newValue, setSearchResultsCollBy, setErrorCollBy)}
           onChange={handleCollByChange}
           renderInput={(params) => (
@@ -818,7 +952,6 @@ function Edit() {
             />
           )}
         />
-        <input type="hidden" id="selectedCollByKey" value={selectedCollByKey} />
       </Grid>
           </Grid>
         </Box>
@@ -932,37 +1065,7 @@ function Edit() {
  </Grid>
     </Box>
       )}
-      {/* {invoiceData && (
-          <Box className="fieldset">
-          <Grid container spacing={3} alignItems="center">
-         
-          
-            <Grid item xs={12}>
-              <FormControl component="fieldset" fullWidth>
-                <FormGroup row>
-                 <FormControlLabel
-                    control={<Checkbox checked={report.urgentwork} onChange={handleCheckChange} name="urgentwork" />}
-                    label="Urgent Report"
-                  />
-                </FormGroup>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} sm={12}>
-              <TextField
-                id="notes"
-                label="Notes"
-                variant="outlined"
-                size="small"
-                fullWidth
-                value={invoiceData.Inv_Comment|| ''}
-                onChange={(e) => setNotes(e.target.value)}
-                InputLabelProps={{ style: { fontSize: '14px' } }}
-              />
-            </Grid>
-         
-          </Grid>
-        </Box>
-      )} */}
+     
       <ToastContainer />
     </Box>
   );
