@@ -5,10 +5,14 @@ import Navbar from './Navbar';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+
+
 function Edit() {
   const [labNo, setLabNo] = useState('');
+  const [invNo, setInvNo] = useState('');
   const [branchId, setBranchId] = useState('');
   const [yearId, setYearId] = useState('');
+  const [cpyId, setCpyId] = useState(null);
   const [invDate, setInvDate] = useState('');
   const [invTime, setInvTime] = useState('');
   const [prefix, setPrefix] = useState('');
@@ -19,6 +23,7 @@ function Edit() {
   const [gender, setGender] = useState('');
   const [dob, setDob] = useState('');
   const [age, setAge] = useState('');
+  const [wardId,setWardId] = useState('')
   const [email, setEmail] = useState('');
   const [phone1, setPhone1] = useState('');
   const [phone2, setPhone2] = useState('');
@@ -38,16 +43,17 @@ function Edit() {
   const [reportOn, setReportOn] = useState('');
   const [reportRequestedThrough, setReportRequestedThrough] = useState({
     personally: false,
-    whatsapp: false,
     courier: false,
+    phone: false,
     email: false,
     sms: false,
-    telephone: false,
+    
   });
   const [report, setReport] = useState({ urgentwork: false });
   const [notes, setNotes] = useState('');
   const [invoiceData, setInvoiceData] = useState(null);
   const [error, setError] = useState(null);
+  const [errorAadhar, setErrorAadhar] = useState('');
   const [isDataUpdated, setIsDataUpdated] = useState(false);
   const [isEmailValid, setIsEmailValid] = useState(true); // State to track email validation
   const [isPhone1Valid, setIsPhone1Valid] = useState(true);
@@ -77,8 +83,20 @@ function Edit() {
     Inv_DrId: invoiceData?.Inv_DrId || 0,
     Inv_CltnID: invoiceData?.Inv_CltnID || 0,
     Inv_CollModeId:invoiceData?.Inv_CollModeId || 0,
-    Inv_CpyId:invoiceData?.Inv_CpyId || 0
+    Inv_BrId:invoiceData?.Inv_BrId || 0
   });
+  useEffect(() => {
+    // Check if yrId is updated
+    if (yearId !== null) {
+        // Update cpyId to match yrId
+        setCpyId(yearId);
+    }
+}, [yearId]); // Run this effect whenever yrId changes
+
+// Function to update yrId
+// const updateYrId = (newValue) => {
+//     setYrId(newValue);
+// };
 
  useEffect(() => {
 
@@ -108,31 +126,52 @@ function Edit() {
       sampleOn !== (invoiceData?.SmplDate || '') ||
       reportOn !== (invoiceData?.RepTime || '') ||
       notes !== (invoiceData?.Inv_Comment || '') ||
+      wardId !== (invoiceData?.Inv_WardId || '') ||
       reportRequestedThrough.personally !== (invoiceData?.Inv_RepThrPersonal || false) ||
-      reportRequestedThrough.whatsapp !== (invoiceData?.Inv_RepThrCourier || false) ||
-      reportRequestedThrough.courier !== (invoiceData?.Inv_RepThrPhone || false) ||
-      reportRequestedThrough.email !== (invoiceData?.Inv_RepThrEmail || false) ||
+      reportRequestedThrough.courier !== (invoiceData?.Inv_RepThrCourier || false) ||
+      reportRequestedThrough.phone !== (invoiceData?.Inv_RepThrPhone || false) ||
       reportRequestedThrough.sms !== (invoiceData?.Inv_RepThrSms || false) ||
-      reportRequestedThrough.telephone !== (invoiceData?.Inv_RepThrPhone || false) ||
+      reportRequestedThrough.email !== (invoiceData?.Inv_RepThrEmail || false) ||
       address !== (invoiceData?.Inv_Address || '') ||
       invDate !== (invoiceData?.Inv_Date || '') ||  
-      invTime !== (invoiceData?.Inv_time || '')
+      invTime !== (invoiceData?.Inv_time || '')||
+      invNo !== (invoiceData?.Inv_No || '') 
     );
   }, [prefix, name, day, month, year, gender, dob, phone1, phone2, email, nationality, address,
     outDr, passport, srfNo, wardNo, ipOpNo, aadhar, refBy, branch, collBy, collMode, sampleOn,
-    reportOn, notes, reportRequestedThrough, invDate, invTime , invoiceData,
+    reportOn, notes, reportRequestedThrough, invDate, invTime ,invNo,sampleOn,reportOn,wardId, invoiceData,
   ]);
   
 useEffect(() => {
-    const prefixToGender = {
-      Mr: 'M',
-      Mrs: 'F',
-      Ms: 'F',
-      Miss: 'F',
+    const prefixToGender = { Mr: 'M',Mrs: 'F',Ms: 'F', Miss: 'F',
     };
 
     setGender(prefixToGender[prefix] || '');
   }, [prefix]);
+
+
+  const handleAadharChange = (e) => {
+    const inputValue = e.target.value;
+    setAadhar(inputValue);
+    
+    // Clear Aadhar error when Aadhar field is changed
+    if (!/^\d{12}$/.test(inputValue)) {
+      setErrorAadhar('Aadhar number must be 12 digits');
+    } else {
+      setErrorAadhar('');
+    }
+  };
+  
+
+  const handleAadharBlur = () => {
+    // Validate Aadhar number when input loses focus
+    if (!/^\d{12}$/.test(aadhar)) {
+      setErrorAadhar('Aadhar number must be 12 digits');
+      toast.error('Aadhar number must be 12 digits'); // Display toast message
+    }
+  };
+
+
   // Function to validate email using regex
   const validateEmail = (email) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -143,6 +182,8 @@ useEffect(() => {
     const regex = /^[0-9]{10}$/;
     return regex.test(phone);
   };
+
+// for fetching data
   const fetchData = async () => {
     try {
       const response = await axios.get(`http://172.16.16.10:8082/api/EditInvoice`, {
@@ -180,7 +221,7 @@ useEffect(() => {
        } else {
          setSearchResultsCollMode([]);
        }
-       const branchValue = invoiceData.Inv_CpyId || '';
+       const branchValue = invoiceData.Branch || '';
        setBranch(branchValue);
        if (branchValue) {
          setSearchResultsBranch([{BrMst_Name: branchValue }]);
@@ -191,8 +232,9 @@ useEffect(() => {
       Inv_DrId: invoiceData?.Inv_DrId || 0,
       Inv_CltnID: invoiceData?.Inv_CltnID || 0,
       Inv_CollModeId:invoiceData?.Inv_CollModeId || 0,
-      Inv_CpyId:invoiceData?.Inv_CpyId || 0
+      Inv_BrId:invoiceData?.Inv_BrId || 0
         });
+      setInvNo(invoiceData?.Inv_No || '');
       const validPrefixes = ['', 'Mr', 'Mrs', 'Ms', 'Miss'];
       setPrefix(validPrefixes.includes(invoiceData.Inv_Tittle) ? invoiceData.Inv_Tittle : '');
       setName(invoiceData.Inv_name || '');
@@ -214,9 +256,10 @@ useEffect(() => {
       setSearchResultsRefBy([invoiceData.Inv_RefBy]);
       setBranch(invoiceData.Branch || '');
       setCollMode(invoiceData.Inv_CollMode || '');
+      setWardId(invoiceData.Inv_WardId || '');
       // setSearchResultsBranch([{ BrMst_Name: invoiceData.Branch }]);
       // setSearchResultsCollMode([{ Mstr_Desc: invoiceData.Inv_CollMode }]);
-       setSearchResultsBranch([invoiceData.Branch]);
+      setSearchResultsBranch([invoiceData.Branch]);
       setCollBy(invoiceData.Inv_CollBy || '');
       setSearchResultsCollBy([invoiceData.Inv_CollBy]);
        setSearchResultsCollMode([invoiceData.Inv_CollMode]);
@@ -226,20 +269,33 @@ useEffect(() => {
       setWardNo(invoiceData.Inv_Ward || '');
       setReportRequestedThrough({
         personally:invoiceData.Inv_RepThrPersonal || false,
-        whatsapp: invoiceData.Inv_RepThrCourier || false,
-        courier: invoiceData.Inv_RepThrPhone || false,
+        courier: invoiceData.Inv_RepThrCourier || false,
+        phone: invoiceData.Inv_RepThrPhone || false,
         email:invoiceData.Inv_RepThrEmail || false,
         sms: invoiceData.Inv_RepThrSms || false,
-        telephone: invoiceData.Inv_RepThrPhone || false,
+        
       });
-      setInvDate(invoiceData?.Inv_Date || '');
-      setInvTime(invoiceData?.Inv_time || '');
+      setSampleOn(invoiceData.SmplDate || '');
+      setReportOn(invoiceData.RepTime || '');
+      setInvDate(invoiceData.Inv_Date || '');
+      setInvTime(invoiceData.Inv_time || '');
     } catch (error) {
       setError(error.message);
     }
   };
 
+
+
+  // saving data back
+
 const saveDataToAPI = () => {
+
+  console.log('Aadhar state:', aadhar); 
+  // Check if Aadhar number is empty or not 12 digits
+  if (!aadhar || !/^\d{12}$/.test(aadhar)) {
+    setErrorAadhar('Aadhar number must be 12 digits');
+    return;
+  }
   // Check if email is filled and validate email format
   if (email && !validateEmail(email)) {
     setIsEmailValid(false);
@@ -261,14 +317,42 @@ const saveDataToAPI = () => {
   const payload = {
     ...invoiceData,
     // LabNo:labNo,
-    Inv_Tittle: prefix,Inv_name: name, Inv_ageDD: day,Inv_ageMM: month,Inv_ageYY: year,Inv_Gender: gender,
-    Inv_Dob: dob, Inv_Email: email,Inv_phno: phone1,Inv_Mob: phone2,Inv_Nationality: nationality,Inv_Address: address,
-    Inv_Aadhaar: aadhar,Inv_OutDr: outDr,Inv_Passport: passport,Inv_RsltNO: ipOpNo,Inv_SRFno: srfNo,Inv_Ward: wardNo,
-    Inv_CollBy: collBy,Inv_CollMode: collMode,Inv_RefBy: refBy,Inv_DrId: invData.Inv_DrId,Inv_CltnID:invData.Inv_CltnID,
-    Inv_CollModeId:invData.Inv_CollModeId,Inv_CpyId: invData.Inv_CpyId,Branch: branch,Inv_RepThrPersonal: reportRequestedThrough.personally,
-    Inv_RepThrCourier: reportRequestedThrough.whatsapp,Inv_RepThrPhone: reportRequestedThrough.courier,
-    Inv_RepThrEmail: reportRequestedThrough.email, Inv_RepThrSms: reportRequestedThrough.sms,
-    Inv_RepThrTelephone: reportRequestedThrough.telephone,Inv_Comment:notes,Inv_Date: invDate,Inv_time: invTime,
+    Inv_No: invNo,
+    Inv_Tittle: prefix,
+    Inv_name: name, 
+    Inv_ageDD: day,
+    Inv_ageMM: month,
+    Inv_ageYY: year,
+    Inv_Gender: gender,
+    Inv_Dob: dob, 
+    Inv_Email: email,
+    Inv_phno: phone1,
+    Inv_Mob: phone2,
+    Inv_Nationality: nationality,
+    Inv_Address: address,
+    Inv_Aadhaar: aadhar,
+    Inv_OutDr: outDr,
+    Inv_Passport: passport,
+    Inv_RsltNO: ipOpNo,
+    Inv_SRFno: srfNo,
+    Inv_Ward: wardNo,
+    Inv_CollBy: collBy,
+    Inv_CollMode: collMode,
+    Inv_RefBy: refBy,
+    Inv_DrId: invData.Inv_DrId,
+    Inv_CltnID:invData.Inv_CltnID,
+    Inv_CollModeId:invData.Inv_CollModeId,
+    Inv_BrId: invData.Inv_BrId,
+    // Branch: branch,
+    Inv_WardId:wardId || null,
+    SmplDate:sampleOn,
+    RepTime:reportOn,
+    Inv_RepThrPersonal: reportRequestedThrough.personally,
+    Inv_RepThrCourier: reportRequestedThrough.courier,
+    Inv_RepThrPhone: reportRequestedThrough.phone,
+    Inv_RepThrEmail: reportRequestedThrough.email,
+     Inv_RepThrSms: reportRequestedThrough.sms,
+    Inv_Comment:notes,Inv_Date: invDate,Inv_time: invTime,
   };
 
   // Log the payload to check if all values are correct
@@ -438,7 +522,7 @@ const saveDataToAPI = () => {
           setBranch(newValue);
           setInvData(prevState => ({
             ...prevState,
-            Inv_CpyId: selectedBranch.BrMst_Key, 
+            Inv_BrId: selectedBranch.BrMst_Key, 
           }));
         }
       } else {
@@ -446,7 +530,7 @@ const saveDataToAPI = () => {
         setBranch('');
         setInvData(prevState => ({
           ...prevState,
-          Inv_CpyId: 0, 
+          Inv_BrId: 0, 
         }));
       }
     };
@@ -893,18 +977,23 @@ const handleNewButtonClick = () => {
     )}
   />
 </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                id="aadhar"
-                label="Aadhar"
-                variant="outlined"
-                size="small"
-                fullWidth
-                value={aadhar}
-                onChange={(e) => setAadhar(e.target.value)}
-                InputLabelProps={{ style: { fontSize: '14px' } }}
-              />
-            </Grid>
+
+      <Grid item xs={12} sm={6}>
+        <TextField
+          id="aadhar"
+          label="Aadhar"
+          variant="outlined"
+          size="small"
+          fullWidth
+          value={aadhar}
+          onChange={handleAadharChange}
+          onBlur={handleAadharBlur}
+          InputLabelProps={{ style: { fontSize: '14px' } }}
+          error={!!errorAadhar}
+          helperText={errorAadhar}
+        />
+      </Grid>
+
             <Grid item xs={12} sm={6}>
               <TextField
                 id="wardno"
@@ -981,39 +1070,30 @@ const handleNewButtonClick = () => {
       <Box className="fieldset">
       <Grid container spacing={3} alignItems="center">
       <Grid item xs={12} sm={6}>
-          <FormControl variant="outlined" size="small" fullWidth>
-            <InputLabel id="dateTimeLabel">Sample On</InputLabel>
-            <Select
-              labelId="sampleon"
-              id="sampleon"
-              value={invoiceData.SmplDate || ''}
-        onChange={(e) => setSampleOn(e.target.value)}
-              label="Sample On"
-            >
-              <MenuItem value=""><em>None</em></MenuItem>
-              <MenuItem value={`${invoiceData.SmplDate}`}>
-        {`${invoiceData.SmplDate}`}
-      </MenuItem>
-            </Select>
-          </FormControl>
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <FormControl variant="outlined" size="small" fullWidth>
-            <InputLabel id="dateTimeLabel">Report On</InputLabel>
-            <Select
-              labelId="reporton"
-              id="reporton"
-              value={invoiceData.RepTime || ''}
-        onChange={(e) => setReportOn(e.target.value)}
-              label="Report On"
-            >
-              <MenuItem value=""><em>None</em></MenuItem>
-              <MenuItem value={`${invoiceData.RepTime}`}>
-        {`${invoiceData.RepTime}`}
-      </MenuItem>
-            </Select>
-          </FormControl>
-        </Grid>
+  <TextField
+    id="sampleOn"
+    label="Sample On"
+    variant="outlined"
+    size="small"
+    fullWidth
+    value={sampleOn}
+    onChange={(e) => setSampleOn(e.target.value)}
+    InputLabelProps={{ style: { fontSize: '14px' } }}
+  />
+</Grid>
+<Grid item xs={12} sm={6}>
+  <TextField
+    id="reportOn"
+    label="Report On"
+    variant="outlined"
+    size="small"
+    fullWidth
+    value={reportOn}
+    onChange={(e) => setReportOn(e.target.value)}
+    InputLabelProps={{ style: { fontSize: '14px' } }}
+  />
+</Grid>
+
         <Grid item xs={12}>
       <FormControl component="fieldset">
         <Typography variant="body1" gutterBottom>Report Requested Through</Typography>
@@ -1022,14 +1102,15 @@ const handleNewButtonClick = () => {
             control={<Checkbox checked={reportRequestedThrough.personally} onChange={handleCheckboxChange} name="personally" />}
             label="Personally"
           />
-          <FormControlLabel
-            control={<Checkbox checked={reportRequestedThrough.whatsapp} onChange={handleCheckboxChange} name="whatsapp" />}
-            label="WhatsApp"
-          />
-          <FormControlLabel
+           <FormControlLabel
             control={<Checkbox checked={reportRequestedThrough.courier} onChange={handleCheckboxChange} name="courier" />}
             label="Courier"
           />
+          <FormControlLabel
+            control={<Checkbox checked={reportRequestedThrough.phone} onChange={handleCheckboxChange} name="phone" />}
+            label="phone"
+          />
+         
           <FormControlLabel
             control={<Checkbox checked={reportRequestedThrough.email} onChange={handleCheckboxChange} name="email" />}
             label="Email"
@@ -1038,10 +1119,7 @@ const handleNewButtonClick = () => {
             control={<Checkbox checked={reportRequestedThrough.sms} onChange={handleCheckboxChange} name="sms" />}
             label="SMS"
           />
-          <FormControlLabel
-            control={<Checkbox checked={reportRequestedThrough.telephone} onChange={handleCheckboxChange} name="telephone" />}
-            label="Telephone"
-          />
+         
         </FormGroup>
       </FormControl>
       
