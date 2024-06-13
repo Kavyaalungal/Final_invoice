@@ -39,8 +39,8 @@ function Edit() {
   const [ipOpNo, setIpOpNo] = useState('');
   const [collMode, setCollMode] = useState('');
   const [collBy, setCollBy] = useState('');
-  const [sampleOn, setSampleOn] = useState('');
-  const [reportOn, setReportOn] = useState('');
+  // const [sampleOn, setSampleOn] = useState('');
+  // const [reportOn, setReportOn] = useState('');
   const [reportRequestedThrough, setReportRequestedThrough] = useState({
     personally: false,
     courier: false,
@@ -59,7 +59,10 @@ function Edit() {
   const [isPhone1Valid, setIsPhone1Valid] = useState(true);
   const [isPhone2Valid, setIsPhone2Valid] = useState(true);
 
- 
+  const [smplDate, setSmplDate] = useState('');
+  const [invSmplDate, setInvSmplDate] = useState('');
+  const [repTime, setRepTime] = useState('');
+  const [invRepTime, setInvRepTime] = useState('');
   // States for search results for different fields
 
   const [searchResultsRefBy, setSearchResultsRefBy] = useState([]);
@@ -123,8 +126,10 @@ function Edit() {
       collMode !== (invoiceData?.Inv_CollMode || '') ||
       wardNo !== (invoiceData?.Inv_Ward || '') ||
       ipOpNo !== (invoiceData?.Inv_RsltNO || '') ||
-      sampleOn !== (invoiceData?.SmplDate || '') ||
-      reportOn !== (invoiceData?.RepTime || '') ||
+      smplDate !== (invoiceData?.SmplDate || '') ||
+      invSmplDate !== (invoiceData?.Inv_SmplDate || '') ||
+      repTime !== (invoiceData?.RepTime || '') ||
+     invRepTime !== (invoiceData?.Inv_RepTime || '') ||
       notes !== (invoiceData?.Inv_Comment || '') ||
       wardId !== (invoiceData?.Inv_WardId || '') ||
       reportRequestedThrough.personally !== (invoiceData?.Inv_RepThrPersonal || false) ||
@@ -138,10 +143,47 @@ function Edit() {
       invNo !== (invoiceData?.Inv_No || '') 
     );
   }, [prefix, name, day, month, year, gender, dob, phone1, phone2, email, nationality, address,
-    outDr, passport, srfNo, wardNo, ipOpNo, aadhar, refBy, branch, collBy, collMode, sampleOn,
-    reportOn, notes, reportRequestedThrough, invDate, invTime ,invNo,sampleOn,reportOn,wardId, invoiceData,
+    outDr, passport, srfNo, wardNo, ipOpNo, aadhar, refBy, branch, collBy, collMode,
+    repTime, notes, reportRequestedThrough, invDate, invTime ,invNo,smplDate,wardId,invRepTime,invSmplDate, invoiceData,
   ]);
+  // const handleSmplDateChange = (event) => {
+  //   const newSmplDate = event.target.value;
+    
+  //   // Convert the new date to the required formats
+  //   const newDate = new Date(newSmplDate);
+  //   const formattedSmplDate = `${newDate.getMonth()}/${newDate.getDate()}/${newDate.getFullYear()} 12:00:00 AM`;
+  //   const formattedInvSmplDate = newDate.toISOString().split('T')[0];
+    
+  //   // Update the state
+  //   setSmplDate(formattedSmplDate);
+  //   setInvSmplDate(formattedInvSmplDate);
+  // };
   
+  // useEffect(() => {
+  //   if (invoiceData) {
+  //     const initialDate = new Date(invoiceData.SmplDate);
+  //     const formattedSmplDate = `${initialDate.getFullYear()}-${(initialDate.getMonth() + 1).toString().padStart(2, '0')}-${initialDate.getDate().toString().padStart(2, '0')}`;
+  //     setSmplDate(formattedSmplDate);
+  //     setInvSmplDate(initialDate.toISOString().split('T')[0]);
+  //   }
+  // }, [invoiceData]);
+
+  // const handleSmplDateChange = (event) => {
+  //   const newSmplDate = event.target.value;
+
+  //   // Update the state with the new date
+  //   setSmplDate(newSmplDate);
+
+  //   // Convert the new date to the required formats
+  //   const newDate = new Date(newSmplDate);
+  //   const formattedSmplDate = `${(newDate.getMonth() + 1).toString().padStart(2, '0')}/${newDate.getDate().toString().padStart(2, '0')}/${newDate.getFullYear()} 12:00:00 AM`;
+  //   const formattedInvSmplDate = newDate.toISOString().split('T')[0];
+
+  //   // Update the state with formatted dates
+  //   setSmplDate(formattedSmplDate);
+  //   setInvSmplDate(formattedInvSmplDate);
+  // };
+
 useEffect(() => {
     const prefixToGender = { Mr: 'M',Mrs: 'F',Ms: 'F', Miss: 'F',
     };
@@ -234,6 +276,28 @@ useEffect(() => {
       Inv_CollModeId:invoiceData?.Inv_CollModeId || 0,
       Inv_BrId:invoiceData?.Inv_BrId || 0
         });
+
+
+     // Formatting the dates
+    // Formatting the dates
+    const initialSmplDate = new Date(invoiceData.SmplDate);
+    const formattedSmplDate = formatToUTC(initialSmplDate, 'MM/DD/YYYY 12:00:00 AM');
+    const formattedInvSmplDate = initialSmplDate.toISOString().split('T')[0];
+
+    const initialRepTime = new Date(invoiceData.Inv_RepTime);
+    const formattedRepTime = formatToUTC(initialRepTime, 'MM/DD/YYYY 12:00:00 AM');
+    const formattedInvRepTime = initialRepTime.toISOString().split('T')[0];
+
+    setSmplDate(formattedSmplDate);
+    setInvSmplDate(formattedInvSmplDate);
+    setRepTime(formattedRepTime);
+    setInvRepTime(formattedInvRepTime);
+
+     setSmplDate(formattedSmplDate);
+     setInvSmplDate(formattedInvSmplDate);
+     setRepTime(formattedRepTime);
+     setInvRepTime(formattedInvRepTime);
+
       setInvNo(invoiceData?.Inv_No || '');
       const validPrefixes = ['', 'Mr', 'Mrs', 'Ms', 'Miss'];
       setPrefix(validPrefixes.includes(invoiceData.Inv_Tittle) ? invoiceData.Inv_Tittle : '');
@@ -275,13 +339,44 @@ useEffect(() => {
         sms: invoiceData.Inv_RepThrSms || false,
         
       });
-      setSampleOn(invoiceData.SmplDate || '');
-      setReportOn(invoiceData.RepTime || '');
+      setSmplDate(invoiceData.SmplDate || '');
+      setRepTime(invoiceData.RepTime || '');
+      setInvRepTime(invoiceData.Inv_RepTime || '');
       setInvDate(invoiceData.Inv_Date || '');
       setInvTime(invoiceData.Inv_time || '');
+      setInvSmplDate(invoiceData.Inv_SmplDate)
     } catch (error) {
       setError(error.message);
     }
+  };
+
+
+  const formatToUTC = (date, format) => {
+    const utcDate = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+    const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+    return utcDate.toLocaleDateString('en-US', options) + ' 12:00:00 AM';
+  };
+
+  const handleSmplDateChange = (event) => {
+    const newInvSmplDate = event.target.value;
+    const newDate = new Date(newInvSmplDate);
+
+    const formattedSmplDate = formatToUTC(newDate, 'MM/DD/YYYY 12:00:00 AM');
+    const formattedInvSmplDate = newDate.toISOString().split('T')[0];
+
+    setSmplDate(formattedSmplDate);
+    setInvSmplDate(formattedInvSmplDate);
+  };
+
+  const handleRepTimeChange = (event) => {
+    const newInvRepTime = event.target.value;
+    const newDate = new Date(newInvRepTime);
+
+    const formattedRepTime = formatToUTC(newDate, 'MM/DD/YYYY 12:00:00 AM');
+    const formattedInvRepTime = newDate.toISOString().split('T')[0];
+
+    setRepTime(formattedRepTime);
+    setInvRepTime(formattedInvRepTime);
   };
 
 
@@ -345,8 +440,10 @@ const saveDataToAPI = () => {
     Inv_BrId: invData.Inv_BrId,
     // Branch: branch,
     Inv_WardId:wardId || null,
-    SmplDate:sampleOn,
-    RepTime:reportOn,
+    SmplDate:smplDate,
+    Inv_SmplDate: invSmplDate,
+    RepTime:repTime,
+    Inv_RepTime:invRepTime,
     Inv_RepThrPersonal: reportRequestedThrough.personally,
     Inv_RepThrCourier: reportRequestedThrough.courier,
     Inv_RepThrPhone: reportRequestedThrough.phone,
@@ -571,8 +668,8 @@ const clearDetails = () => {setLabNo('');setBranchId('');setYearId('');setInvoic
   setInvDate('');setInvTime('');setPrefix('');setName('');setDay('');setMonth('');setYear('');setGender('');
 setDob('');setPhone1('');setPhone2('');setEmail('');setNationality('');setAddress('');setRefBy(''); setOutDr('');
 setPassport('');setSrfNo('');setBranch(''); setAadhar(''); setWardNo('');setIpOpNo('');setCollMode('');setCollBy('');
-setSampleOn('');setReportOn('');setReportRequestedThrough({ personally: false,whatsapp: false,courier: false,email: false, sms: false,
-  telephone: false,
+setReportOn('');setReportRequestedThrough({ personally: false,courier: false,email: false, sms: false,
+  phone: false,
   });setReport({ urgentwork: false });setNotes('');
 };
 // Event handler for "NEW" button click
@@ -688,21 +785,6 @@ const handleNewButtonClick = () => {
   
   InputLabelProps={{ style: { fontSize: '14px' } }}
 />
-  {/* <FormControl variant="outlined" size="small" fullWidth>
-    <InputLabel id="dateTimeLabel">Date/Time</InputLabel>
-    <Select
-      labelId="dateTimeLabel"
-      id="dateTime"
-      value={`${invoiceData.Inv_Date} ${invoiceData.Inv_time}` || ''}
-      onChange={(e) => setDateTime(e.target.value)}
-      label="Date/Time"
-    >
-      <MenuItem value=""><em>None</em></MenuItem>
-      <MenuItem value={`${invoiceData.Inv_Date} ${invoiceData.Inv_time}`}>
-        {`${invoiceData.Inv_Date} ${invoiceData.Inv_time}`}
-      </MenuItem>
-    </Select>
-  </FormControl> */}
 </Grid>
 </Grid>
 </Box>
@@ -1070,28 +1152,30 @@ const handleNewButtonClick = () => {
       <Box className="fieldset">
       <Grid container spacing={3} alignItems="center">
       <Grid item xs={12} sm={6}>
-  <TextField
-    id="sampleOn"
-    label="Sample On"
-    variant="outlined"
-    size="small"
-    fullWidth
-    value={sampleOn}
-    onChange={(e) => setSampleOn(e.target.value)}
-    InputLabelProps={{ style: { fontSize: '14px' } }}
-  />
-</Grid>
+      <TextField
+        id="sampleOn"
+        label="Sample On"
+        variant="outlined"
+        size="small"
+        fullWidth
+          //  type="datetime-local"
+        value={smplDate}
+        onChange={handleSmplDateChange}
+        InputLabelProps={{ shrink: true, style: { fontSize: '14px' } }}
+      />
+      </Grid>
 <Grid item xs={12} sm={6}>
-  <TextField
-    id="reportOn"
-    label="Report On"
-    variant="outlined"
-    size="small"
-    fullWidth
-    value={reportOn}
-    onChange={(e) => setReportOn(e.target.value)}
-    InputLabelProps={{ style: { fontSize: '14px' } }}
-  />
+<TextField
+        id="reportTime"
+        label="Report Time"
+        variant="outlined"
+        size="small"
+        fullWidth
+        // type="date"
+        value={repTime}
+        onChange={handleRepTimeChange}
+        InputLabelProps={{ shrink: true, style: { fontSize: '14px' } }}
+      />
 </Grid>
 
         <Grid item xs={12}>
