@@ -1,0 +1,60 @@
+.edit-invoice-container {
+    padding: 20px;
+    margin: 0 auto;
+    max-width: 800px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(187, 181, 181, 0.1);
+    background-color:#ffffff;
+    
+  }
+  
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .navbar-heading {
+    margin: 0;
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    text-decoration: none;
+  }
+  
+  .navbar-buttons {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .navbar-button {
+    font-weight: bold;
+  }
+  
+  .fieldset {
+    padding: 20px;
+    border: 2px solid #eee;
+    border-radius: 8px;
+    background-color: #fff;
+    margin-top: 20px;
+  }
+  
+  .input-row {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  
+  .input-label {
+    margin-bottom: 5px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .navbar-heading{
+    color: black;
+  }
+ 
