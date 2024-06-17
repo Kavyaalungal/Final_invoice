@@ -192,12 +192,13 @@ useEffect(() => {
       const response = await axios.get(`http://172.16.16.10:8082/api/EditInvoice`, {
         params: {
           LabNo: labNo,
-          YearId: yearId,
-          BranchId: branchId,
+          YearId: 2425,
+          BranchId: 2,
         },
       });
       const invoiceData = response.data.invoiceDtls;
       setInvoiceData(invoiceData);
+      console.log('Fetched Invoice Data:', invoiceData);
       // for refby field
       const refByValue = invoiceData.Inv_RefBy || '';
       setRefBy(refByValue);
@@ -292,10 +293,6 @@ useEffect(() => {
   const formatDateTimeForInput = (dateTime) => {
     return dateTime.slice(0, 16); // Truncate milliseconds and time zone for input field
   };
-  // const handleInvDateTimeChange = (e) => {
-  //   const value = e.target.value.trim(); // Trim any leading or trailing spaces
-  //   setInvDateTime(value); // Update invDateTime state
-  // };
   useEffect(() => {
     if (invoiceData) {
       // Assuming invoiceData contains Inv_Date and Inv_time as strings
@@ -308,20 +305,12 @@ useEffect(() => {
   const handleDateTimeChange = (e) => {
     setInvDateTime(e.target.value); // Update state with new datetime value
     const datetimeValue = e.target.value;
+
     const timePart = datetimeValue.slice(11, 16); // Extract HH:mm from YYYY-MM-DDTHH:mm
     setInvTime(timePart);
   };
   
-
-  // Function to handle change in datetime-local input
-  // const handleDateTimeChange = (e) => {
-  //   setInvDateTime(e.target.value); // Update state with new datetime value
-  //   const datetimeValue = e.target.value;
-  //   const timePart = datetimeValue.slice(11, 16); // Extract HH:mm from YYYY-MM-DDTHH:mm
-  //   setInvTime(timePart);
-  // };
-
-    // function for sample on and report on field 
+   // function for sample on and report on field 
    const handleSmplDateChange = (event) => {
     const newSmplDate = event.target.value;
     setSmplDate(newSmplDate);
@@ -366,26 +355,29 @@ useEffect(() => {
       const initialTime = initialSmplDate.slice(11, 16)
       const initialTimePart = initialRepTime.slice(11, 16); // Extracts HH:mm
       setInvRepTime(initialTimePart + ':00.000Z');
-      setInvSmplDate(initialTime + ':00.000z') // Ensure format HH:mm:ss.SSSZ
+      setInvSmplDate(initialTime + ':00.000Z') // Ensure format HH:mm:ss.SSSZ
     }
   }, [invoiceData]);
   
 
 
   const formatTimeToAMPM = (time) => {
-    const hour = parseInt(time.slice(0, 2), 10);
+    let hour = parseInt(time.slice(0, 2), 10);
     const minute = time.slice(3, 5);
     let period = 'AM';
+  
     if (hour === 0) {
-      period = 'AM';
+      hour = 12;  // Midnight case
     } else if (hour === 12) {
       period = 'PM';
     } else if (hour > 12) {
       period = 'PM';
       hour -= 12;
     }
+  
     return `${hour}:${minute} ${period}`;
   };
+  
 
 // saving data back to server
 
@@ -456,7 +448,8 @@ const saveDataToAPI = () => {
     Inv_RepThrEmail: reportRequestedThrough.email,
     Inv_RepThrSms: reportRequestedThrough.sms,
     Inv_Comment:notes,
-    Inv_Date: invDateTime.slice(0, 10), // Extract date part
+    Inv_Date: invDateTime.slice(0, 10),
+     // Extract date part
     Inv_time: formatTimeToAMPM(invTime)  // Extract time part
   };
   console.log('Payload to be sent to API:', payload);
@@ -708,7 +701,7 @@ const handleNewButtonClick = () => {
                 InputLabelProps={{ style: { fontSize: '14px' } }}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            {/* <Grid item xs={12} sm={6}>
               <TextField
                 id="branchId"
                 label="Branch Id"
@@ -731,7 +724,7 @@ const handleNewButtonClick = () => {
                 onChange={(e) => setYearId(e.target.value)}
                 InputLabelProps={{ style: { fontSize: '14px' } }}
               />
-            </Grid>
+            </Grid> */}
             <Grid item xs={12} sm={6}>
               <Button variant="contained" color="primary" onClick={fetchData}>
                 Search
@@ -755,10 +748,23 @@ const handleNewButtonClick = () => {
                 InputLabelProps={{ style: { fontSize: '14px' } }}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={3}>
+            <TextField
+          id="invTime"
+          label="Time"
+          variant="outlined"
+          fullWidth
+          size="small"
+          value={invTime ? formatTimeToAMPM(invTime) : ''}
+          onChange={(e) => setInvTime(e.target.value)}
+          InputLabelProps={{ style: { fontSize: '14px' } }}
+        />
+      </Grid>
+           
+            <Grid item xs={12} sm={3}>
             <TextField
             id="invDateTime"
-            label="Date/Time"
+            label="Date"
             variant="outlined"
             size="small"
             fullWidth
