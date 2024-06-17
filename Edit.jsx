@@ -5,9 +5,8 @@ import Navbar from './Navbar';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-
-
 function Edit() {
+ // state variables for fields
   const [labNo, setLabNo] = useState('');
   const [invNo, setInvNo] = useState('');
   const [branchId, setBranchId] = useState('');
@@ -39,8 +38,6 @@ function Edit() {
   const [ipOpNo, setIpOpNo] = useState('');
   const [collMode, setCollMode] = useState('');
   const [collBy, setCollBy] = useState('');
-  // const [sampleOn, setSampleOn] = useState('');
-  // const [reportOn, setReportOn] = useState('');
   const [reportRequestedThrough, setReportRequestedThrough] = useState({
     personally: false,
     courier: false,
@@ -49,20 +46,21 @@ function Edit() {
     sms: false,
     
   });
+  const [invDateTime, setInvDateTime] = useState('');
   const [report, setReport] = useState({ urgentwork: false });
   const [notes, setNotes] = useState('');
   const [invoiceData, setInvoiceData] = useState(null);
   const [error, setError] = useState(null);
   const [errorAadhar, setErrorAadhar] = useState('');
   const [isDataUpdated, setIsDataUpdated] = useState(false);
-  const [isEmailValid, setIsEmailValid] = useState(true); // State to track email validation
+  const [isEmailValid, setIsEmailValid] = useState(true); 
   const [isPhone1Valid, setIsPhone1Valid] = useState(true);
   const [isPhone2Valid, setIsPhone2Valid] = useState(true);
-
   const [smplDate, setSmplDate] = useState('');
   const [invSmplDate, setInvSmplDate] = useState('');
   const [repTime, setRepTime] = useState('');
   const [invRepTime, setInvRepTime] = useState('');
+  
   // States for search results for different fields
 
   const [searchResultsRefBy, setSearchResultsRefBy] = useState([]);
@@ -81,7 +79,6 @@ function Edit() {
   const [selectedCollByKey, setSelectedCollByKey] = useState('');
   const [selectedBranchKey, setSelectedBranchKey] = useState('');
   const[selectedCollModeKey,setSelectedCollModeKey] = useState('')
-
   const [invData, setInvData] = useState({
     Inv_DrId: invoiceData?.Inv_DrId || 0,
     Inv_CltnID: invoiceData?.Inv_CltnID || 0,
@@ -129,7 +126,7 @@ function Edit() {
       smplDate !== (invoiceData?.SmplDate || '') ||
       invSmplDate !== (invoiceData?.Inv_SmplDate || '') ||
       repTime !== (invoiceData?.RepTime || '') ||
-     invRepTime !== (invoiceData?.Inv_RepTime || '') ||
+      invRepTime !== (invoiceData?.Inv_RepTime || '') ||
       notes !== (invoiceData?.Inv_Comment || '') ||
       wardId !== (invoiceData?.Inv_WardId || '') ||
       reportRequestedThrough.personally !== (invoiceData?.Inv_RepThrPersonal || false) ||
@@ -146,44 +143,8 @@ function Edit() {
     outDr, passport, srfNo, wardNo, ipOpNo, aadhar, refBy, branch, collBy, collMode,
     repTime, notes, reportRequestedThrough, invDate, invTime ,invNo,smplDate,wardId,invRepTime,invSmplDate, invoiceData,
   ]);
-  // const handleSmplDateChange = (event) => {
-  //   const newSmplDate = event.target.value;
-    
-  //   // Convert the new date to the required formats
-  //   const newDate = new Date(newSmplDate);
-  //   const formattedSmplDate = `${newDate.getMonth()}/${newDate.getDate()}/${newDate.getFullYear()} 12:00:00 AM`;
-  //   const formattedInvSmplDate = newDate.toISOString().split('T')[0];
-    
-  //   // Update the state
-  //   setSmplDate(formattedSmplDate);
-  //   setInvSmplDate(formattedInvSmplDate);
-  // };
-  
-  // useEffect(() => {
-  //   if (invoiceData) {
-  //     const initialDate = new Date(invoiceData.SmplDate);
-  //     const formattedSmplDate = `${initialDate.getFullYear()}-${(initialDate.getMonth() + 1).toString().padStart(2, '0')}-${initialDate.getDate().toString().padStart(2, '0')}`;
-  //     setSmplDate(formattedSmplDate);
-  //     setInvSmplDate(initialDate.toISOString().split('T')[0]);
-  //   }
-  // }, [invoiceData]);
-
-  // const handleSmplDateChange = (event) => {
-  //   const newSmplDate = event.target.value;
-
-  //   // Update the state with the new date
-  //   setSmplDate(newSmplDate);
-
-  //   // Convert the new date to the required formats
-  //   const newDate = new Date(newSmplDate);
-  //   const formattedSmplDate = `${(newDate.getMonth() + 1).toString().padStart(2, '0')}/${newDate.getDate().toString().padStart(2, '0')}/${newDate.getFullYear()} 12:00:00 AM`;
-  //   const formattedInvSmplDate = newDate.toISOString().split('T')[0];
-
-  //   // Update the state with formatted dates
-  //   setSmplDate(formattedSmplDate);
-  //   setInvSmplDate(formattedInvSmplDate);
-  // };
-
+ 
+ 
 useEffect(() => {
     const prefixToGender = { Mr: 'M',Mrs: 'F',Ms: 'F', Miss: 'F',
     };
@@ -237,17 +198,16 @@ useEffect(() => {
       });
       const invoiceData = response.data.invoiceDtls;
       setInvoiceData(invoiceData);
+      // for refby field
       const refByValue = invoiceData.Inv_RefBy || '';
       setRefBy(refByValue);
-
-      // Initialize search results if Ref By value exists
       if (refByValue) {
         setSearchResultsRefBy([{ AhMst_pName: refByValue }]);
       } else {
         setSearchResultsRefBy([]);
       }
 
-       // Initialize CollBy field
+       // for CollBy field
        const collByValue = invoiceData.Inv_CollBy || '';
        setCollBy(collByValue);
        if (collByValue) {
@@ -255,7 +215,7 @@ useEffect(() => {
        } else {
          setSearchResultsCollBy([]);
        }
-
+        // for collmode value
        const collModeValue = invoiceData.Inv_CollMode || '';
        setCollMode(collModeValue);
        if (collModeValue) {
@@ -263,6 +223,7 @@ useEffect(() => {
        } else {
          setSearchResultsCollMode([]);
        }
+       // for branch value
        const branchValue = invoiceData.Branch || '';
        setBranch(branchValue);
        if (branchValue) {
@@ -276,28 +237,8 @@ useEffect(() => {
       Inv_CollModeId:invoiceData?.Inv_CollModeId || 0,
       Inv_BrId:invoiceData?.Inv_BrId || 0
         });
-
-
-     // Formatting the dates
-    // Formatting the dates
-    const initialSmplDate = new Date(invoiceData.SmplDate);
-    const formattedSmplDate = formatToUTC(initialSmplDate, 'MM/DD/YYYY 12:00:00 AM');
-    const formattedInvSmplDate = initialSmplDate.toISOString().split('T')[0];
-
-    const initialRepTime = new Date(invoiceData.Inv_RepTime);
-    const formattedRepTime = formatToUTC(initialRepTime, 'MM/DD/YYYY 12:00:00 AM');
-    const formattedInvRepTime = initialRepTime.toISOString().split('T')[0];
-
-    setSmplDate(formattedSmplDate);
-    setInvSmplDate(formattedInvSmplDate);
-    setRepTime(formattedRepTime);
-    setInvRepTime(formattedInvRepTime);
-
-     setSmplDate(formattedSmplDate);
-     setInvSmplDate(formattedInvSmplDate);
-     setRepTime(formattedRepTime);
-     setInvRepTime(formattedInvRepTime);
-
+        // const dateTime = `${invoiceData.Inv_Date} ${invoiceData.Inv_time}`;
+      // setInvDateTime(dateTime);
       setInvNo(invoiceData?.Inv_No || '');
       const validPrefixes = ['', 'Mr', 'Mrs', 'Ms', 'Miss'];
       setPrefix(validPrefixes.includes(invoiceData.Inv_Tittle) ? invoiceData.Inv_Tittle : '');
@@ -321,12 +262,10 @@ useEffect(() => {
       setBranch(invoiceData.Branch || '');
       setCollMode(invoiceData.Inv_CollMode || '');
       setWardId(invoiceData.Inv_WardId || '');
-      // setSearchResultsBranch([{ BrMst_Name: invoiceData.Branch }]);
-      // setSearchResultsCollMode([{ Mstr_Desc: invoiceData.Inv_CollMode }]);
       setSearchResultsBranch([invoiceData.Branch]);
       setCollBy(invoiceData.Inv_CollBy || '');
       setSearchResultsCollBy([invoiceData.Inv_CollBy]);
-       setSearchResultsCollMode([invoiceData.Inv_CollMode]);
+      setSearchResultsCollMode([invoiceData.Inv_CollMode]);
       setPassport(invoiceData.Inv_Passport || '');
       setAadhar(invoiceData.Inv_Aadhaar || '');
       setIpOpNo(invoiceData.Inv_RsltNO || '');
@@ -350,38 +289,105 @@ useEffect(() => {
     }
   };
 
-
-  const formatToUTC = (date, format) => {
-    const utcDate = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
-    const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-    return utcDate.toLocaleDateString('en-US', options) + ' 12:00:00 AM';
+  const formatDateTimeForInput = (dateTime) => {
+    return dateTime.slice(0, 16); // Truncate milliseconds and time zone for input field
   };
+  // const handleInvDateTimeChange = (e) => {
+  //   const value = e.target.value.trim(); // Trim any leading or trailing spaces
+  //   setInvDateTime(value); // Update invDateTime state
+  // };
+  useEffect(() => {
+    if (invoiceData) {
+      // Assuming invoiceData contains Inv_Date and Inv_time as strings
+      const formattedDateTime = `${invoiceData.Inv_Date}T${invoiceData.Inv_time}`;
+      setInvDateTime(formattedDateTime);
+      // setInvTime(formattedDateTime);
+    }
+  }, [invoiceData]);
 
-  const handleSmplDateChange = (event) => {
-    const newInvSmplDate = event.target.value;
-    const newDate = new Date(newInvSmplDate);
-
-    const formattedSmplDate = formatToUTC(newDate, 'MM/DD/YYYY 12:00:00 AM');
-    const formattedInvSmplDate = newDate.toISOString().split('T')[0];
-
-    setSmplDate(formattedSmplDate);
-    setInvSmplDate(formattedInvSmplDate);
+  const handleDateTimeChange = (e) => {
+    setInvDateTime(e.target.value); // Update state with new datetime value
+    const datetimeValue = e.target.value;
+    const timePart = datetimeValue.slice(11, 16); // Extract HH:mm from YYYY-MM-DDTHH:mm
+    setInvTime(timePart);
   };
+  
 
+  // Function to handle change in datetime-local input
+  // const handleDateTimeChange = (e) => {
+  //   setInvDateTime(e.target.value); // Update state with new datetime value
+  //   const datetimeValue = e.target.value;
+  //   const timePart = datetimeValue.slice(11, 16); // Extract HH:mm from YYYY-MM-DDTHH:mm
+  //   setInvTime(timePart);
+  // };
+
+    // function for sample on and report on field 
+   const handleSmplDateChange = (event) => {
+    const newSmplDate = event.target.value;
+    setSmplDate(newSmplDate);
+   
+  
+     // Get the current ISO formatted date (YYYY-MM-DD)
+     const currentDate = new Date().toISOString().split('T')[0];
+  
+     // Construct ISO formatted time with current date and new time
+     const isoTime = `${newSmplDate}:00.000Z`;
+   
+     // Update state with the ISO formatted time for storing
+     setInvSmplDate(isoTime);
+  };
+  
   const handleRepTimeChange = (event) => {
-    const newInvRepTime = event.target.value;
-    const newDate = new Date(newInvRepTime);
+    const newRepTime = event.target.value;
+  
+    // Update state with the formatted time for display
+    setRepTime(newRepTime);
+  
+    // Get the current ISO formatted date (YYYY-MM-DD)
+    const currentDate = new Date().toISOString().split('T')[0];
+  
+    // Construct ISO formatted time with current date and new time
+    const isoTime = `${newRepTime}:00.000Z`;
+  
+    // Update state with the ISO formatted time for storing
+    setInvRepTime(isoTime);
+  };
+  
+  useEffect(() => {
+    if (invoiceData) {
+      // Initialize time from invoiceData
+      const initialRepTime = invoiceData.Inv_RepTime || ''; // Assuming Inv_RepTime is a string
+      const initialSmplDate = invoiceData.Inv_SmplDate || ''
+      // Set initial values
+      setRepTime(initialRepTime);
+      setSmplDate(initialSmplDate)
+  
+      // Extract time part from invoiceData and set for storing
+      const initialTime = initialSmplDate.slice(11, 16)
+      const initialTimePart = initialRepTime.slice(11, 16); // Extracts HH:mm
+      setInvRepTime(initialTimePart + ':00.000Z');
+      setInvSmplDate(initialTime + ':00.000z') // Ensure format HH:mm:ss.SSSZ
+    }
+  }, [invoiceData]);
+  
 
-    const formattedRepTime = formatToUTC(newDate, 'MM/DD/YYYY 12:00:00 AM');
-    const formattedInvRepTime = newDate.toISOString().split('T')[0];
 
-    setRepTime(formattedRepTime);
-    setInvRepTime(formattedInvRepTime);
+  const formatTimeToAMPM = (time) => {
+    const hour = parseInt(time.slice(0, 2), 10);
+    const minute = time.slice(3, 5);
+    let period = 'AM';
+    if (hour === 0) {
+      period = 'AM';
+    } else if (hour === 12) {
+      period = 'PM';
+    } else if (hour > 12) {
+      period = 'PM';
+      hour -= 12;
+    }
+    return `${hour}:${minute} ${period}`;
   };
 
-
-
-  // saving data back
+// saving data back to server
 
 const saveDataToAPI = () => {
 
@@ -408,7 +414,7 @@ const saveDataToAPI = () => {
     setIsPhone2Valid(false);
     return;
   }
-
+ 
   const payload = {
     ...invoiceData,
     // LabNo:labNo,
@@ -448,11 +454,11 @@ const saveDataToAPI = () => {
     Inv_RepThrCourier: reportRequestedThrough.courier,
     Inv_RepThrPhone: reportRequestedThrough.phone,
     Inv_RepThrEmail: reportRequestedThrough.email,
-     Inv_RepThrSms: reportRequestedThrough.sms,
-    Inv_Comment:notes,Inv_Date: invDate,Inv_time: invTime,
+    Inv_RepThrSms: reportRequestedThrough.sms,
+    Inv_Comment:notes,
+    Inv_Date: invDateTime.slice(0, 10), // Extract date part
+    Inv_time: formatTimeToAMPM(invTime)  // Extract time part
   };
-
-  // Log the payload to check if all values are correct
   console.log('Payload to be sent to API:', payload);
 
   axios.post('http://172.16.16.10:8082/api/EditInvSave', payload)
@@ -465,7 +471,7 @@ const saveDataToAPI = () => {
       toast.error('Error saving data.');
     });
 };
-
+    // function for age calculation
     const calculateAge = (dob) => {
       if (dob) {
         const birthDate = new Date(dob);
@@ -566,7 +572,7 @@ const saveDataToAPI = () => {
         setError(error.message);
       }
     };
-    //function to
+    //function to 
     const handleRefByChange = (event, newValue) => {
       if (newValue) {
         const selectedRefBy = searchResultsRefBy.find(result => result.AhMst_pName === newValue);
@@ -631,7 +637,7 @@ const saveDataToAPI = () => {
         }));
       }
     };
-    
+    // eventhandler for collmode field changes
     const handleCollModeChange = (event, newValue) => {
       if (newValue) {
         const selectedCollMode = searchResultsCollMode.find(result => result.Mstr_Desc === newValue);
@@ -665,10 +671,10 @@ const saveDataToAPI = () => {
 
       // for clearing the fields
 const clearDetails = () => {setLabNo('');setBranchId('');setYearId('');setInvoiceData(null);setError(null);
-  setInvDate('');setInvTime('');setPrefix('');setName('');setDay('');setMonth('');setYear('');setGender('');
+setInvDate('');setInvTime('');setPrefix('');setName('');setDay('');setMonth('');setYear('');setGender('');
 setDob('');setPhone1('');setPhone2('');setEmail('');setNationality('');setAddress('');setRefBy(''); setOutDr('');
 setPassport('');setSrfNo('');setBranch(''); setAadhar(''); setWardNo('');setIpOpNo('');setCollMode('');setCollBy('');
-setReportOn('');setReportRequestedThrough({ personally: false,courier: false,email: false, sms: false,
+setReportRequestedThrough({ personally: false,courier: false,email: false, sms: false,
   phone: false,
   });setReport({ urgentwork: false });setNotes('');
 };
@@ -676,14 +682,6 @@ setReportOn('');setReportRequestedThrough({ personally: false,courier: false,ema
 const handleNewButtonClick = () => {
   clearDetails();
 };
-  // Event handler for urgent work checkbox changes
-  // const handleCheckChange = (event) => {
-  //   setReport({
-  //     ...report,
-  //     [event.target.name]: event.target.checked,
-  //   });
-  // };
-    
     return (
       <Box className="edit-invoice-container">
         <Navbar />
@@ -695,6 +693,7 @@ const handleNewButtonClick = () => {
             <Button variant="contained" color="default" className="navbar-button">EXIT</Button>
           </Box>
         </Box>
+        
         <Box className="fieldset">
           <Grid container spacing={3} alignItems="center">
             <Grid item xs={12} sm={6}>
@@ -744,7 +743,7 @@ const handleNewButtonClick = () => {
         {invoiceData && (
         <Box className="fieldset">
           <Grid container spacing={3} alignItems="center">
-            {/* <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={6}>
               <TextField
                 id="labNo"
                 label="Lab No"
@@ -755,40 +754,51 @@ const handleNewButtonClick = () => {
                 onChange={(e) => setLabNo(e.target.value)}
                 InputLabelProps={{ style: { fontSize: '14px' } }}
               />
-            </Grid> */}
+            </Grid>
             <Grid item xs={12} sm={6}>
             <TextField
-  id="dateTime"
-  label="Date/Time"
-  variant="outlined"
-  size="small"
-  fullWidth
-  value={`${invDate} ${invTime}`}
-  onChange={(e) => {
-    const value = e.target.value.trim(); // Trim any leading or trailing spaces
-    console.log('Value before split:', value);
-    
-    // Split by space or comma followed by space
-    const [date, time] = value.split(/\s*,\s*|\s+/);
-    
-    // Check if both date and time parts exist
-    if (date && time) {
-      console.log('Date:', date, 'Time:', time);
-      setInvDate(date);
-      setInvTime(time);
-    } else {
-      // Handle invalid input or missing parts
-      console.log('Invalid DateTime format');
-      // Optionally, you can set defaults or show an error message to the user
-    }
-  }}
-  
-  InputLabelProps={{ style: { fontSize: '14px' } }}
-/>
-</Grid>
-</Grid>
-</Box>
-    )}
+            id="invDateTime"
+            label="Date/Time"
+            variant="outlined"
+            size="small"
+            fullWidth
+            type="datetime-local" // Set type to datetime-local
+            value={formatDateTimeForInput(invDateTime)}
+            onChange={handleDateTimeChange}
+            InputLabelProps={{ shrink: true }}
+          />
+            {/* <TextField
+                id="dateTime"
+                label="Date/Time"
+                variant="outlined"
+                size="small"
+                fullWidth
+                value={`${invDate} ${invTime}`}
+                onChange={(e) => {
+                  const value = e.target.value.trim(); // Trim any leading or trailing spaces
+                  console.log('Value before split:', value);
+                  
+                  // Split by space or comma followed by space
+                  const [date, time] = value.split(/\s*,\s*|\s+/);
+                  
+                  // Check if both date and time parts exist
+                  if (date && time) {
+                    console.log('Date:', date, 'Time:', time);
+                    setInvDate(date);
+                    setInvTime(time);
+                  } else {
+                    // Handle invalid input or missing parts
+                    console.log('Invalid DateTime format');
+                    // Optionally, you can set defaults or show an error message to the user
+                  }
+                }}
+                
+                InputLabelProps={{ style: { fontSize: '14px' } }}
+              /> */}
+    </Grid>
+    </Grid>
+    </Box>
+        )}
         {invoiceData && (
           <Box className="fieldset">
             <Grid container spacing={3} alignItems="center">
@@ -1152,31 +1162,32 @@ const handleNewButtonClick = () => {
       <Box className="fieldset">
       <Grid container spacing={3} alignItems="center">
       <Grid item xs={12} sm={6}>
-      <TextField
-        id="sampleOn"
-        label="Sample On"
-        variant="outlined"
-        size="small"
-        fullWidth
-          //  type="datetime-local"
-        value={smplDate}
-        onChange={handleSmplDateChange}
-        InputLabelProps={{ shrink: true, style: { fontSize: '14px' } }}
-      />
-      </Grid>
-<Grid item xs={12} sm={6}>
-<TextField
-        id="reportTime"
-        label="Report Time"
-        variant="outlined"
-        size="small"
-        fullWidth
-        // type="date"
-        value={repTime}
-        onChange={handleRepTimeChange}
-        InputLabelProps={{ shrink: true, style: { fontSize: '14px' } }}
-      />
+  <TextField
+    id="sampleOn"
+    label="Sample On"
+    type="datetime-local"
+    variant="outlined"
+    size="small"
+    fullWidth
+    value={smplDate}
+    onChange={handleSmplDateChange}
+    InputLabelProps={{ shrink: true, style: { fontSize: '14px' } }}
+  />
 </Grid>
+<Grid item xs={12} sm={6}>
+  <TextField
+    id="reportTime"
+    label="Report Time"
+    type="datetime-local"
+    variant="outlined"
+    size="small"
+    fullWidth
+    value={repTime}
+    onChange={handleRepTimeChange}
+    InputLabelProps={{ shrink: true, style: { fontSize: '14px' } }}
+  />
+</Grid>
+
 
         <Grid item xs={12}>
       <FormControl component="fieldset">
