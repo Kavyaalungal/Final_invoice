@@ -9,6 +9,7 @@ import Single from './Single';
 import Search from './Search';
 import Edit from './Edit';
 import ParentComponent from './ParentComponent';
+import Edit1 from './Edit1';
 
 const theme = createTheme({
   palette: {

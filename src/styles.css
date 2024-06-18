@@ -1,0 +1,39 @@
+.edit-invoice-container {
+    max-width: 800px; /* Adjust width as per your design */
+    margin: 0 auto; /* Center align the form */
+    padding: 20px;
+    box-sizing: border-box;
+    /* Add more styles as needed */
+  }
+  
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    /* Add more styles as needed */
+  }
+  
+  .navbar-heading {
+    font-size: 24px;
+    /* Add more styles as needed */
+  }
+  
+  .navbar-buttons {
+    display: flex;
+    gap: 10px;
+    /* Add more styles as needed */
+  }
+  
+  .fieldset {
+    margin-bottom: 20px;
+    /* Add more styles as needed */
+  }
+  
+  .form-group {
+    margin-bottom: 20px;
+    /* Add more styles as needed */
+  }
+  
+  /* Customize form fields, buttons, typography, etc. */
+  
