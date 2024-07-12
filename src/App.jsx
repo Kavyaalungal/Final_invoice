@@ -10,6 +10,8 @@ import Search from './Search';
 import Edit from './Edit';
 import ParentComponent from './ParentComponent';
 import Edit1 from './Edit1';
+import Cancel from './Cancel';
+import Bill from './Bill';
 
 const theme = createTheme({
   palette: {
@@ -33,9 +35,11 @@ function App() {
     
     <ThemeProvider theme={theme}>
       {/* <ParentComponent/> */}
-      <Edit/> 
+      {/* <Edit/>  */}
       {/* <Search/>
       {/* <SingleFieldFetch/> */}
+      {/* <Bill/> */}
+      <Cancel/>
       {/* <Single/> */}
       {/* <InvoiceData/> */}
       {/* <Invoice /> */}

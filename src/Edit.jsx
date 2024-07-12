@@ -238,8 +238,6 @@ useEffect(() => {
       Inv_CollModeId:invoiceData?.Inv_CollModeId || 0,
       Inv_BrId:invoiceData?.Inv_BrId || 0
         });
-        // const dateTime = `${invoiceData.Inv_Date} ${invoiceData.Inv_time}`;
-      // setInvDateTime(dateTime);
       setInvNo(invoiceData?.Inv_No || '');
       const validPrefixes = ['', 'Mr', 'Mrs', 'Ms', 'Miss'];
       setPrefix(validPrefixes.includes(invoiceData.Inv_Tittle) ? invoiceData.Inv_Tittle : '');
@@ -290,30 +288,7 @@ useEffect(() => {
     }
   };
 
-  // const formatDateTimeForInput = (dateTime) => {
-  //   return dateTime.slice(0, 16); // Truncate milliseconds and time zone for input field
-  // };
-  // useEffect(() => {
-  //   if (invoiceData) {
-  //     // Assuming invoiceData contains Inv_Date and Inv_time as strings
-  //     const formattedDateTime = `${invoiceData.Inv_Date}T${invoiceData.Inv_time}`;
-  //     setInvDateTime(formattedDateTime);
-  //     // setInvTime(formattedDateTime);
-  //   }
-  // }, [invoiceData]);
-
-  // const handleDateTimeChange = (e) => {
-  //   setInvDateTime(e.target.value); // Update state with new datetime value
-  //   const datetimeValue = e.target.value;
-
-  //   const timePart = datetimeValue.slice(11, 16); // Extract HH:mm from YYYY-MM-DDTHH:mm
-  //   setInvTime(timePart);
-  // };
-
-
-
-
- // Utility function to convert AM/PM time to 24-hour format
+// Utility function to convert AM/PM time to 24-hour format
 const convertAMPMTo24Hour = (time) => {
   let [hour, minutePeriod] = time.split(':');
   const minute = minutePeriod.slice(0, 2);
@@ -382,7 +357,7 @@ const handleDateTimeChange = (e) => {
   useEffect(() => {
     if (invoiceData) {
       // Initialize time from invoiceData
-      const initialRepTime = invoiceData.Inv_RepTime || ''; // Assuming Inv_RepTime is a string
+      const initialRepTime = invoiceData.Inv_RepTime || ''; 
       const initialSmplDate = invoiceData.Inv_SmplDate || ''
       // Set initial values
       setRepTime(initialRepTime);
@@ -760,7 +735,7 @@ const handleNewButtonClick = () => {
         </Box>
         {error && <Typography variant="body2" color="error">{error}</Typography>}
         {invoiceData && (
-        <Box className="fieldset">
+        <Box className="fieldset" style={{ border: '2px solid #ccc', padding: '20px' }}>
           <Grid container spacing={3} alignItems="center">
             <Grid item xs={12} sm={6}>
               <TextField
@@ -774,18 +749,7 @@ const handleNewButtonClick = () => {
                 InputLabelProps={{ style: { fontSize: '14px' } }}
               />
             </Grid>
-            {/* <Grid item xs={12} sm={3}>
-            <TextField
-          id="invTime"
-          label="Time"
-          variant="outlined"
-          fullWidth
-          size="small"
-          value={invTime ? formatTimeToAMPM(invTime) : ''}
-          onChange={(e) => setInvTime(e.target.value)}
-          InputLabelProps={{ style: { fontSize: '14px' } }}
-        />
-      </Grid> */}
+           
            
             <Grid item xs={12} sm={6}>
             <TextField
@@ -799,40 +763,13 @@ const handleNewButtonClick = () => {
       onChange={handleDateTimeChange}
       InputLabelProps={{ shrink: true }}
     />
-            {/* <TextField
-                id="dateTime"
-                label="Date/Time"
-                variant="outlined"
-                size="small"
-                fullWidth
-                value={`${invDate} ${invTime}`}
-                onChange={(e) => {
-                  const value = e.target.value.trim(); // Trim any leading or trailing spaces
-                  console.log('Value before split:', value);
-                  
-                  // Split by space or comma followed by space
-                  const [date, time] = value.split(/\s*,\s*|\s+/);
-                  
-                  // Check if both date and time parts exist
-                  if (date && time) {
-                    console.log('Date:', date, 'Time:', time);
-                    setInvDate(date);
-                    setInvTime(time);
-                  } else {
-                    // Handle invalid input or missing parts
-                    console.log('Invalid DateTime format');
-                    // Optionally, you can set defaults or show an error message to the user
-                  }
-                }}
-                
-                InputLabelProps={{ style: { fontSize: '14px' } }}
-              /> */}
+           
     </Grid>
     </Grid>
     </Box>
         )}
         {invoiceData && (
-          <Box className="fieldset">
+         <Box className="fieldset" style={{ border: '2px solid #ccc', padding: '20px' }}>
             <Grid container spacing={3} alignItems="center">
             <Grid item xs={12} sm={2}>
                 <FormControl variant="outlined" size="small" fullWidth>
@@ -1019,7 +956,7 @@ const handleNewButtonClick = () => {
         </Box>
       )}
        {invoiceData && (
-          <Box className="fieldset">
+           <Box className="fieldset" style={{ border: '2px solid #ccc', padding: '20px' }}>
           <Grid container spacing={3} alignItems="center">
           <Grid item xs={12} sm={6}>
       <Autocomplete
@@ -1191,7 +1128,7 @@ const handleNewButtonClick = () => {
         </Box>
       )}
        {invoiceData && (
-      <Box className="fieldset">
+       <Box className="fieldset" style={{ border: '2px solid #ccc', padding: '20px' }}>
       <Grid container spacing={3} alignItems="center">
       <Grid item xs={12} sm={6}>
   <TextField
@@ -1251,27 +1188,7 @@ const handleNewButtonClick = () => {
       </FormControl>
       
     </Grid>
-
-
- </Grid>
-    </Box>
-      )}
-      {invoiceData && (
-          <Box className="fieldset">
-          <Grid container spacing={3} alignItems="center">
-         
-          
-            <Grid item xs={12}>
-              <FormControl component="fieldset" fullWidth>
-                <FormGroup row>
-                 <FormControlLabel
-                    control={<Checkbox checked={report.urgentwork}  name="urgentwork" />}
-                    label="Urgent Report"
-                  />
-                </FormGroup>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} sm={12}>
+    <Grid item xs={12} sm={12}>
               <TextField
                 id="notes"
                 label="Notes"
@@ -1283,10 +1200,41 @@ const handleNewButtonClick = () => {
                 InputLabelProps={{ style: { fontSize: '14px' } }}
               />
             </Grid>
-         
-          </Grid>
-        </Box>
+
+ </Grid>
+    </Box>
       )}
+      {/* {invoiceData && (
+          <Box className="fieldset" style={{ border: '2px solid #ccc', padding: '20px' }}>
+          <Grid container spacing={3} alignItems="center"> */}
+         
+{/*           
+            <Grid item xs={12}>
+              <FormControl component="fieldset" fullWidth>
+                <FormGroup row>
+                 <FormControlLabel
+                    control={<Checkbox checked={report.urgentwork}  name="urgentwork" />}
+                    label="Urgent Report"
+                  />
+                </FormGroup>
+              </FormControl>
+            </Grid> */}
+            {/* <Grid item xs={12} sm={12}>
+              <TextField
+                id="notes"
+                label="Notes"
+                variant="outlined"
+                size="small"
+                fullWidth
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                InputLabelProps={{ style: { fontSize: '14px' } }}
+              />
+            </Grid> */}
+         
+          {/* </Grid>
+        </Box>
+      )} */}
       <ToastContainer />
     </Box>
   );
