@@ -38,8 +38,8 @@ function App() {
       {/* <Edit/>  */}
       {/* <Search/>
       {/* <SingleFieldFetch/> */}
-      {/* <Bill/> */}
-      <Cancel/>
+      <Bill/>
+      {/* <Cancel/> */}
       {/* <Single/> */}
       {/* <InvoiceData/> */}
       {/* <Invoice /> */}
