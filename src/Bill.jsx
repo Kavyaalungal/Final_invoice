@@ -408,7 +408,7 @@ const Bill = () => {
             </Grid>
             <Grid item xs={12} md={4}>
               <Box sx={{ display: 'flex', justifyContent: { xs: 'center', md: 'flex-end' }, gap: '16px' }}>
-                <CButton color="primary" style={{ width: '100%', maxWidth: { xs: '100%', sm: 'auto' } }}>
+                <CButton color="primary" style={{ width: '100%', maxWidth: { xs: '100%', sm: 'auto' },backgroundColor:' #599eb4 ' }}>
                   FETCH
                 </CButton>
                 <CButton color="primary" style={{ width: '100%', maxWidth: { xs: '100%', sm: 'auto' } }}>
@@ -489,54 +489,53 @@ const Bill = () => {
     />
 
 </Grid>
-          <Grid item xs={12} md={4}>
-            <TextField
-              fullWidth
-              label="From Date"
-              type="date"
-              InputLabelProps={{
-                shrink: true,
-              }}
-              value={fromDate}
-              onChange={(e) => setFromDate(e.target.value)}
-              sx={{ border: '1px solid #ccc', borderRadius: 1 }}
-            />
+          <Grid item xs={12} md={6}>
+          
           </Grid>
 
-          <Grid item xs={12} md={4}>
-            <TextField
-              fullWidth
-              label="Up To Date"
-              type="date"
-              InputLabelProps={{
-                shrink: true,
-              }}
-              value={toDate}
-              onChange={(e) => setToDate(e.target.value)}
-              sx={{ border: '1px solid #ccc', borderRadius: 1 }}
-            />
+          <Grid item xs={12} md={3}>
+          <TextField
+                id="dob"
+                label="Date of Birth"
+                type="date"
+                variant="outlined"
+                size="small"
+                fullWidth
+                InputLabelProps={{ shrink: true, style: { fontSize: '14px' } }}
+              />
           </Grid>
 
-          <Grid item xs={12} md={4}>
-            <TextField
-              fullWidth
-              label="Amount"
-              sx={{ border: '1px solid #ccc', borderRadius: 1 }}
-            />
+          <Grid item xs={12} md={9}>
+         
+          </Grid>
+          <Grid item xs={12} md={3}>
+          <TextField
+                id="dob"
+                label="Date of Birth"
+                type="date"
+                variant="outlined"
+                size="small"
+                fullWidth
+                InputLabelProps={{ shrink: true, style: { fontSize: '14px' } }}
+              />
+          </Grid>
+          <Grid item xs={12} md={3}>
+          <TextField
+                id="dob"
+                label="Date of Birth"
+                type="date"
+                variant="outlined"
+                size="small"
+                fullWidth
+                InputLabelProps={{ shrink: true, style: { fontSize: '14px' } }}
+              />
           </Grid>
 
-          <Grid item xs={12} md={12} style={{ textAlign: 'right' }}>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleFormSubmit}
-              disabled={loading} // Disable button when loading
-            >
-              {loading ? <CircularProgress size={24} /> : 'Auto Allocate'}
-            </Button>
+          <Grid item xs={12} md={6}>
+          
           </Grid>
 
-          <Grid item xs={12}>
+          {/* <Grid item xs={12}>
             <Typography variant="h6" gutterBottom>Bill Details</Typography>
             <Box sx={{ border: '1px solid #ccc', borderRadius: 1, padding: 2 }}>
               <Grid container spacing={2}>
@@ -550,7 +549,7 @@ const Bill = () => {
                 <Grid item xs={2}><Typography variant="body1">Allocated Amt</Typography></Grid>
                 <Grid item xs={2}><Typography variant="body1">Current Bal</Typography></Grid>
               </Grid>
-              {/* Example row */}
+     
               <Grid container spacing={2}>
                 <Grid item xs={1}><Typography variant="body2">1</Typography></Grid>
                 <Grid item xs={1}><Typography variant="body2">1234</Typography></Grid>
@@ -562,9 +561,9 @@ const Bill = () => {
                 <Grid item xs={2}><Typography variant="body2">$80</Typography></Grid>
                 <Grid item xs={2}><Typography variant="body2">$0</Typography></Grid>
               </Grid>
-              {/* Additional rows can be added similarly */}
+             
             </Box>
-          </Grid>
+          </Grid> */}
         </Grid>
       </Paper>
     </Container>
