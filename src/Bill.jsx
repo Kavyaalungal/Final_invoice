@@ -358,7 +358,13 @@ import {
   CircularProgress,
   Paper,
   Box,
-  Container
+  Container,
+  TableContainer,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody
 } from '@mui/material';
 import { CButton } from '@coreui/react';
 import axios from 'axios';
@@ -387,6 +393,13 @@ const Bill = () => {
       setLoading(false); // Hide loading indicator
     }
   };
+
+  const rows = [
+    { id: 1, col1: 'Data 1', col2: 'Data 2', col3: 'Data 3', col4: 'Data 4', col5: 'Data 5', col6: 'Data 6', col7: 'Data 7' },
+    { id: 2, col1: 'Data 8', col2: 'Data 9', col3: 'Data 10', col4: 'Data 11', col5: 'Data 12', col6: 'Data 13', col7: 'Data 14' },
+    { id: 3, col1: 'Data 15', col2: 'Data 16', col3: 'Data 17', col4: 'Data 18', col5: 'Data 19', col6: 'Data 20', col7: 'Data 21' },
+    { id: 4, col1: 'Data 22', col2: 'Data 23', col3: 'Data 24', col4: 'Data 25', col5: 'Data 26', col6: 'Data 27', col7: 'Data 28' }
+  ];
 
   return (
     <Container component="main" maxWidth="md">
@@ -534,6 +547,40 @@ const Bill = () => {
           <Grid item xs={12} md={6}>
           
           </Grid>
+          <Grid item xs={12}>
+                  <TableContainer style={{ maxHeight: 'calc(100vh - 400px)', overflowY:'auto' }}>
+                    <Table stickyHeader aria-label="sticky table">
+                      <TableHead>
+                        <TableRow>
+                          <TableCell sx={{ border: '1px solid #dddddd', background: '#f2f2f2', fontSize: '12px', padding: '8px' }}>SlNo</TableCell>
+                          <TableCell sx={{ border: '1px solid #dddddd', background: '#f2f2f2', fontSize: '12px', padding: '8px' }}>Lab</TableCell>
+                          <TableCell sx={{ border: '1px solid #dddddd', background: '#f2f2f2', fontSize: '12px', padding: '8px' }}>Date</TableCell>
+                          <TableCell sx={{ border: '1px solid #dddddd', background: '#f2f2f2', fontSize: '12px', padding: '8px' }}>Select</TableCell>
+                          <TableCell sx={{ border: '1px solid #dddddd', background: '#f2f2f2', fontSize: '12px', padding: '8px' }}>Patient</TableCell>
+                          <TableCell sx={{ border: '1px solid #dddddd', background: '#f2f2f2', fontSize: '12px', padding: '8px' }}>Amount</TableCell>
+                          <TableCell sx={{ border: '1px solid #dddddd', background: '#f2f2f2', fontSize: '12px', padding: '8px' }}>Balance</TableCell>
+                          <TableCell sx={{ border: '1px solid #dddddd', background: '#f2f2f2', fontSize: '12px', padding: '8px' }}>Allocated.Amt</TableCell>
+                          <TableCell sx={{ border: '1px solid #dddddd', background: '#f2f2f2', fontSize: '12px', padding: '8px' }}>Current.Bal</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {rows.map((row) => (
+                           <TableRow key={row.id}> 
+                            <TableCell sx={{ border: '1px solid #dddddd', fontSize: '12px', padding: '8px' }}>{row.id}</TableCell>
+                            <TableCell sx={{ border: '1px solid #dddddd', fontSize: '12px', padding: '8px' }}>{row.col1}</TableCell>
+                            <TableCell sx={{ border: '1px solid #dddddd', fontSize: '12px', padding: '8px' }}>{row.col2}</TableCell>
+                            <TableCell sx={{ border: '1px solid #dddddd', fontSize: '12px', padding: '8px' }}>{row.col3}</TableCell>
+                            <TableCell sx={{ border: '1px solid #dddddd', fontSize: '12px', padding: '8px' }}>{row.col4}</TableCell>
+                            <TableCell sx={{ border: '1px solid #dddddd', fontSize: '12px', padding: '8px' }}>{row.col5}</TableCell>
+                            <TableCell sx={{ border: '1px solid #dddddd', fontSize: '12px', padding: '8px' }}>{row.col6}</TableCell>
+                            <TableCell sx={{ border: '1px solid #dddddd', fontSize: '12px', padding: '8px' }}>{row.col7}</TableCell>
+                            <TableCell sx={{ border: '1px solid #dddddd', fontSize: '12px', padding: '8px' }}>{row.col7}</TableCell>
+                            </TableRow> 
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </Grid>
 
           {/* <Grid item xs={12}>
             <Typography variant="h6" gutterBottom>Bill Details</Typography>
@@ -541,29 +588,22 @@ const Bill = () => {
               <Grid container spacing={2}>
                 <Grid item xs={1}><Typography variant="body1">Slno</Typography></Grid>
                 <Grid item xs={1}><Typography variant="body1">Lab No</Typography></Grid>
-                <Grid item xs={1}><Typography variant="body1">Date</Typography></Grid>
+                <<Typography variant="body1">Date</Typography></Grid>
                 <Grid item xs={1}><Typography variant="body1">Select</Typography></Grid>
-                <Grid item xs={2}><Typography variant="body1">Patient</Typography></Grid>
+                <><Typography variant="body1">Patient</Typography></Grid>
                 <Grid item xs={1}><Typography variant="body1">Amount</Typography></Grid>
-                <Grid item xs={1}><Typography variant="body1">Balance</Typography></Grid>
-                <Grid item xs={2}><Typography variant="body1">Allocated Amt</Typography></Grid>
-                <Grid item xs={2}><Typography variant="body1">Current Bal</Typography></Grid>
-              </Grid>
+                 variant="body1">Balance</Typography></Grid>
+                Allocated Amt</Typography></Grid>
+                </Typography></Grid>
+              
      
-              <Grid container spacing={2}>
-                <Grid item xs={1}><Typography variant="body2">1</Typography></Grid>
-                <Grid item xs={1}><Typography variant="body2">1234</Typography></Grid>
-                <Grid item xs={1}><Typography variant="body2">12-07-2024</Typography></Grid>
-                <Grid item xs={1}><Typography variant="body2">Yes</Typography></Grid>
-                <Grid item xs={2}><Typography variant="body2">John Doe</Typography></Grid>
-                <Grid item xs={1}><Typography variant="body2">$100</Typography></Grid>
-                <Grid item xs={1}><Typography variant="body2">$20</Typography></Grid>
-                <Grid item xs={2}><Typography variant="body2">$80</Typography></Grid>
-                <Grid item xs={2}><Typography variant="body2">$0</Typography></Grid>
-              </Grid>
-             
-            </Box>
-          </Grid> */}
+              
+                  
+                 
+                
+                 
+                
+              
         </Grid>
       </Paper>
     </Container>
