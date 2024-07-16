@@ -580,30 +580,7 @@ const Bill = () => {
                       </TableBody>
                     </Table>
                   </TableContainer>
-                </Grid>
-
-          {/* <Grid item xs={12}>
-            <Typography variant="h6" gutterBottom>Bill Details</Typography>
-            <Box sx={{ border: '1px solid #ccc', borderRadius: 1, padding: 2 }}>
-              <Grid container spacing={2}>
-                <Grid item xs={1}><Typography variant="body1">Slno</Typography></Grid>
-                <Grid item xs={1}><Typography variant="body1">Lab No</Typography></Grid>
-                <<Typography variant="body1">Date</Typography></Grid>
-                <Grid item xs={1}><Typography variant="body1">Select</Typography></Grid>
-                <><Typography variant="body1">Patient</Typography></Grid>
-                <Grid item xs={1}><Typography variant="body1">Amount</Typography></Grid>
-                 variant="body1">Balance</Typography></Grid>
-                Allocated Amt</Typography></Grid>
-                </Typography></Grid>
-              
-     
-              
-                  
-                 
-                
-                 
-                
-              
+                </Grid>       
         </Grid>
       </Paper>
     </Container>
